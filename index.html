@@ -2,248 +2,576 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>games.nsprd.com — Daily-ish mini-games to ruin your group chat</title>
-<meta name="description" content="A new sharable mini-game every day. Single-player, mobile-first, instantly playable." />
-<meta name="theme-color" content="#1a0633" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>nsprd games — daily mini-games, freshly built 🎮</title>
+<meta name="description" content="A new shareable mini-game every day. Built overnight, played in minutes, shared everywhere." />
+<meta name="theme-color" content="#0a0420" />
 
+<!-- Open Graph -->
+<meta property="og:title" content="nsprd games — a new mini-game every day" />
+<meta property="og:description" content="Daily, shareable, never serious. Play today's game." />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="games.nsprd.com" />
-<meta property="og:description" content="A new sharable mini-game every day. Made for your group chat." />
 <meta property="og:url" content="https://games.nsprd.com" />
 <meta property="og:image" content="https://games.nsprd.com/og.png" />
+<meta property="og:image:width" content="1536" />
+<meta property="og:image:height" content="1024" />
+
 <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="nsprd games" />
+<meta name="twitter:description" content="A new shareable mini-game every day. Play today's." />
+<meta name="twitter:image" content="https://games.nsprd.com/og.png" />
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎮%3C/text%3E%3C/svg%3E" />
 
 <style>
-  :root{
-    --bg-1:#0a0118;
-    --bg-2:#1a0633;
-    --bg-3:#2d0850;
-    --pink:#ff6ad5;
-    --peach:#ffb86b;
-    --lime:#a8ff60;
-    --sky:#5ee0ff;
-    --gold:#ffd166;
-    --ink:#fff;
+  :root {
+    --bg-1: #0a0420;
+    --bg-2: #1a0935;
+    --ink: #f8f0ff;
+    --ink-soft: #cdb8e6;
+    --muted: rgba(248, 240, 255, 0.55);
+    --card: rgba(255, 255, 255, 0.05);
+    --card-2: rgba(255, 255, 255, 0.09);
+    --border: rgba(255, 255, 255, 0.12);
+    --pink: #ff3d8b;
+    --cyan: #50e3ff;
+    --yellow: #ffe83d;
+    --purple: #a855f7;
+    --shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+    --radius: 18px;
+    --radius-lg: 24px;
   }
-  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  html,body{margin:0;padding:0;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
-  body{
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
     background:
-      radial-gradient(900px 600px at 10% 0%, rgba(255,106,213,.35), transparent 60%),
-      radial-gradient(900px 600px at 90% 80%, rgba(94,224,255,.25), transparent 60%),
-      linear-gradient(160deg,var(--bg-1),var(--bg-2) 60%, var(--bg-3));
-    min-height:100vh;min-height:100dvh;
-    overflow-x:hidden;
-    padding: max(env(safe-area-inset-top),24px) 16px max(env(safe-area-inset-bottom),32px);
+      radial-gradient(ellipse at 15% 0%, rgba(255, 61, 139, 0.18), transparent 55%),
+      radial-gradient(ellipse at 85% 25%, rgba(80, 227, 255, 0.14), transparent 50%),
+      radial-gradient(ellipse at 50% 80%, rgba(168, 85, 247, 0.18), transparent 55%),
+      linear-gradient(180deg, var(--bg-1), var(--bg-2));
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.5;
+    overflow-x: hidden;
   }
 
-  .wrap{max-width:1040px;margin:0 auto;}
-  header.top{
-    display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:32px;
-  }
-  .brand{
-    font-weight:900;font-size:18px;letter-spacing:-.5px;display:flex;align-items:center;gap:8px;
-  }
-  .brand-dot{
-    width:14px;height:14px;border-radius:50%;
-    background:conic-gradient(from 0deg, var(--pink), var(--peach), var(--gold), var(--lime), var(--sky), var(--pink));
-    box-shadow:0 0 14px rgba(255,106,213,.6);
-  }
-  .tag-link{color:#fff;opacity:.7;text-decoration:none;font-size:13px;}
-  .tag-link:hover{opacity:1;}
-
-  .hero{
-    text-align:left;margin-bottom:34px;
-  }
-  .kicker{
-    display:inline-block;text-transform:uppercase;letter-spacing:.18em;font-size:11px;
-    padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);margin-bottom:14px;color:var(--gold);font-weight:800;
-  }
-  h1{
-    font-size:clamp(40px,9vw,76px);line-height:.95;margin:0 0 12px;
-    font-weight:900;letter-spacing:-2px;
-    background: linear-gradient(90deg,var(--pink),var(--peach),var(--gold),var(--sky));
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-  }
-  .lede{font-size:clamp(15px,2.6vw,18px);opacity:.85;max-width:580px;line-height:1.5;margin:0;}
-
-  /* Featured */
-  .featured{
-    margin: 28px 0 44px;
-    border-radius:28px;overflow:hidden;
-    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
-    box-shadow:0 20px 60px rgba(0,0,0,.45);
-    display:grid;grid-template-columns: 1fr;
-    position:relative;
-  }
-  .featured::before{
-    content:"";position:absolute;inset:-2px;border-radius:28px;z-index:-1;
-    background:conic-gradient(from 0deg, var(--pink), var(--peach), var(--gold), var(--lime), var(--sky), var(--pink));
-    filter:blur(40px);opacity:.4;
-    animation: spin 18s linear infinite;
-  }
-  @keyframes spin{to{transform:rotate(360deg);}}
-
-  @media (min-width: 760px){
-    .featured{grid-template-columns: 1.1fr 1fr;}
-  }
-  .featured .art{
-    aspect-ratio: 1200/630;
-    background:#222 center/cover no-repeat;
-    border-bottom:1px solid rgba(255,255,255,.1);
-    position:relative;
-  }
-  @media (min-width: 760px){
-    .featured .art{border-bottom:0;border-right:1px solid rgba(255,255,255,.1);height:100%;aspect-ratio:auto;}
-  }
-  .featured .meta{
-    padding:24px;display:flex;flex-direction:column;justify-content:center;gap:12px;
-  }
-  .badge-of-the-day{
-    display:inline-flex;align-items:center;gap:6px;
-    text-transform:uppercase;letter-spacing:.2em;font-size:11px;font-weight:800;
-    color:#1a0633;background:linear-gradient(90deg,var(--pink),var(--gold));
-    padding:6px 10px;border-radius:999px;align-self:flex-start;
-  }
-  .featured h2{
-    font-size:clamp(30px,5vw,46px);line-height:1;margin:0;font-weight:900;letter-spacing:-1px;
-  }
-  .featured p.tag{font-size:16px;opacity:.85;margin:0;line-height:1.4;}
-  .featured .play-cta{
-    appearance:none;border:0;cursor:pointer;font-family:inherit;text-decoration:none;text-align:center;
-    font-size:17px;font-weight:900;color:#1a0633;
-    background: linear-gradient(90deg, var(--pink), var(--peach), var(--gold));
-    padding:14px 22px;border-radius:999px;align-self:flex-start;
-    box-shadow:0 10px 28px rgba(255,106,213,.45);
-    transition:transform .12s ease;
-  }
-  .featured .play-cta:active{transform:scale(.98);}
-
-  /* All Games grid */
-  .section-title{
-    display:flex;align-items:baseline;justify-content:space-between;margin: 8px 0 16px;
-  }
-  .section-title h3{font-size:22px;margin:0;font-weight:900;letter-spacing:-.5px;}
-  .section-title .count{font-size:12px;opacity:.6;text-transform:uppercase;letter-spacing:.18em;}
-
-  .grid{
-    display:grid;gap:16px;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  /* subtle grid */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 64px 64px;
+    pointer-events: none;
+    z-index: 0;
   }
 
-  .tile{
-    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
-    border-radius:20px;overflow:hidden;
-    display:flex;flex-direction:column;
-    transition:transform .15s ease, border-color .15s ease, background .15s ease;
-    text-decoration:none;color:inherit;
-  }
-  .tile:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.08);}
-  .tile .art{
-    aspect-ratio:1200/630;background:#111 center/cover no-repeat;
-    border-bottom:1px solid rgba(255,255,255,.08);
-  }
-  .tile .body{padding:14px 16px 18px;display:flex;flex-direction:column;gap:6px;flex:1;}
-  .tile .name{font-weight:900;font-size:18px;letter-spacing:-.3px;display:flex;align-items:center;gap:8px;}
-  .tile .name .ico{font-size:18px;}
-  .tile .one{font-size:14px;opacity:.8;line-height:1.4;margin:0;}
-  .tile .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:8px;}
-  .tile .tags span{font-size:11px;opacity:.75;background:rgba(255,255,255,.08);padding:4px 8px;border-radius:999px;}
-
-  .empty{
-    text-align:center;opacity:.6;padding:28px;border:1px dashed rgba(255,255,255,.15);border-radius:18px;
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 28px 22px 80px;
+    position: relative;
+    z-index: 1;
   }
 
-  footer{
-    margin-top:48px;text-align:center;font-size:12px;opacity:.55;
+  /* ---------- Top bar ---------- */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 36px;
   }
-  footer a{color:inherit;}
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+  }
+  .logo-mark {
+    width: 36px; height: 36px;
+    display: grid; place-items: center;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    font-size: 20px;
+    box-shadow: 0 6px 18px rgba(255, 61, 139, 0.4);
+  }
+  .nav {
+    display: flex; gap: 18px;
+    font-size: 14px; color: var(--ink-soft); font-weight: 600;
+  }
+  .nav a { color: var(--ink-soft); text-decoration: none; transition: color 0.15s; }
+  .nav a:hover { color: var(--ink); }
+
+  /* ---------- Hero ---------- */
+  .hero { text-align: center; padding: 24px 8px 8px; }
+  .hero .eyebrow {
+    display: inline-block;
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+  .hero .eyebrow .dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #4ade80;
+    margin-right: 8px;
+    box-shadow: 0 0 10px #4ade80;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+  .hero h1 {
+    font-size: clamp(36px, 8vw, 64px);
+    line-height: 1.05;
+    margin: 0 0 14px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    background: linear-gradient(95deg, var(--pink) 10%, var(--yellow) 50%, var(--cyan) 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero p {
+    color: var(--ink-soft);
+    font-size: clamp(16px, 2.4vw, 18px);
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  /* ---------- Featured ---------- */
+  .featured {
+    margin: 40px 0 48px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    position: relative;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .featured-flag {
+    position: absolute;
+    top: 20px; left: 20px;
+    z-index: 3;
+    padding: 6px 12px;
+    background: linear-gradient(95deg, var(--pink), #ff8c00);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: 0 6px 18px rgba(255, 61, 139, 0.45);
+  }
+  .featured-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 760px) {
+    .featured-grid { grid-template-columns: 1.1fr 1fr; }
+  }
+  .featured-image {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background: #000;
+    overflow: hidden;
+  }
+  .featured-image img {
+    width: 100%; height: 100%; object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+  .featured:hover .featured-image img { transform: scale(1.04); }
+
+  .featured-body {
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .featured-meta {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;
+  }
+  .tag {
+    display: inline-block;
+    padding: 4px 11px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .tag.pink { background: rgba(255,61,139,0.18); border-color: rgba(255,61,139,0.4); color: #ffb1cc; }
+  .tag.cyan { background: rgba(80,227,255,0.15); border-color: rgba(80,227,255,0.4); color: #b0eeff; }
+
+  .featured-body h2 {
+    margin: 0 0 8px;
+    font-size: clamp(24px, 4vw, 32px);
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+  .featured-body .one-liner {
+    color: var(--ink-soft);
+    margin: 0 0 22px;
+    font-size: 16px;
+  }
+  .featured-body .play {
+    align-self: flex-start;
+  }
+
+  /* ---------- Section title ---------- */
+  .section-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin: 0 4px 18px;
+  }
+  .section-head h3 {
+    margin: 0;
+    font-size: 22px; font-weight: 800; letter-spacing: -0.01em;
+  }
+  .section-head .count {
+    color: var(--muted); font-size: 13px; font-weight: 600;
+  }
+
+  /* ---------- Filters ---------- */
+  .filters {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin: 0 0 22px;
+  }
+  .filter {
+    appearance: none;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--ink-soft);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .filter:hover { background: var(--card-2); color: var(--ink); }
+  .filter.active {
+    background: linear-gradient(95deg, var(--pink), var(--purple));
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 6px 16px rgba(255, 61, 139, 0.35);
+  }
+
+  /* ---------- Game grid ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  @media (min-width: 580px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 880px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .tile {
+    display: flex;
+    flex-direction: column;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    color: inherit;
+    text-decoration: none;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.25s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .tile:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 61, 139, 0.5);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+  }
+  .tile-image {
+    aspect-ratio: 16 / 10;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    position: relative;
+    overflow: hidden;
+  }
+  .tile-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .tile-body { padding: 16px 18px 18px; flex: 1; display: flex; flex-direction: column; }
+  .tile-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .tile-meta .tag { font-size: 10px; padding: 3px 8px; }
+  .tile h4 {
+    margin: 0 0 6px;
+    font-size: 17px; font-weight: 800; line-height: 1.2;
+  }
+  .tile p {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 14px;
+    flex: 1;
+  }
+  .tile-foot {
+    margin-top: 14px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px; color: var(--muted); font-weight: 600;
+  }
+  .tile-play {
+    color: var(--cyan);
+    font-weight: 800;
+  }
+
+  /* coming soon tile */
+  .tile.coming {
+    border-style: dashed;
+    opacity: 0.7;
+    cursor: default;
+  }
+  .tile.coming:hover { transform: none; border-color: var(--border); box-shadow: none; }
+  .tile.coming .tile-image {
+    background: rgba(255,255,255,0.04);
+    display: grid; place-items: center;
+    color: var(--muted);
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    appearance: none; border: 0; cursor: pointer; font: inherit;
+    font-weight: 700; font-size: 15px;
+    padding: 13px 22px; border-radius: 999px;
+    transition: transform 0.15s ease, box-shadow 0.2s;
+    color: white;
+    background: linear-gradient(95deg, var(--pink), var(--purple));
+    box-shadow: 0 8px 22px rgba(255, 61, 139, 0.35);
+    display: inline-flex; align-items: center; gap: 8px;
+    text-decoration: none;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(255, 61, 139, 0.5); }
+  .btn:active { transform: translateY(0); }
+
+  /* ---------- About / footer ---------- */
+  .about {
+    margin: 56px 0 24px;
+    padding: 28px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .about h3 {
+    margin: 0 0 10px;
+    font-size: 20px; font-weight: 800;
+  }
+  .about p {
+    margin: 0 auto;
+    color: var(--ink-soft);
+    max-width: 540px;
+  }
+  .about a { color: var(--cyan); font-weight: 700; text-decoration: none; }
+  .about a:hover { text-decoration: underline; }
+
+  footer {
+    text-align: center;
+    padding: 24px 16px 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  footer a { color: var(--cyan); text-decoration: none; font-weight: 600; }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp 0.5s ease both; }
+  .fade-up:nth-child(2) { animation-delay: 0.05s; }
+  .fade-up:nth-child(3) { animation-delay: 0.1s; }
+  .fade-up:nth-child(4) { animation-delay: 0.15s; }
 </style>
 </head>
 <body>
 
 <div class="wrap">
-  <header class="top">
-    <div class="brand"><span class="brand-dot"></span> games.nsprd.com</div>
-    <a class="tag-link" href="https://nsprd.com" target="_blank" rel="noopener">by Inspired Design ↗</a>
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="logo">
+      <div class="logo-mark">🎮</div>
+      <div>nsprd <span style="color: var(--ink-soft); font-weight: 600;">games</span></div>
+    </div>
+    <nav class="nav">
+      <a href="#games">Games</a>
+      <a href="#about">About</a>
+      <a href="https://nsprd.com" target="_blank" rel="noopener">nsprd ↗</a>
+    </nav>
   </header>
 
+  <!-- Hero -->
   <section class="hero">
-    <span class="kicker">🎮 New game every day</span>
-    <h1>Tiny games.<br/>Big group&nbsp;chats.</h1>
-    <p class="lede">Single-player mini-games designed to be played in under 5 minutes and shared in under 5 seconds. No signup. No ads. Just vibes.</p>
+    <span class="eyebrow"><span class="dot"></span>New game every night</span>
+    <h1>A tiny game,<br/>fresh every day.</h1>
+    <p>Mini-games built overnight, played in minutes, made to share. No accounts. No fees. Just vibes.</p>
   </section>
 
-  <section id="featured-slot"></section>
+  <!-- Featured -->
+  <a href="/pride-flag-quiz" class="featured" id="featured">
+    <div class="featured-flag">🏳️‍🌈 Today's Game · Pride 2026</div>
+    <div class="featured-grid">
+      <div class="featured-image">
+        <img src="/pride-flag-quiz-tile.png" alt="Which Pride Flag Are You?" loading="lazy" />
+      </div>
+      <div class="featured-body">
+        <div class="featured-meta">
+          <span class="tag pink">Quiz</span>
+          <span class="tag">Result-based</span>
+          <span class="tag cyan">2 min</span>
+        </div>
+        <h2>Which Pride Flag Are You? 🏳️‍🌈</h2>
+        <p class="one-liner">Eight questions. One fabulous result. Nine real Pride flags. Find your vibe and share the love.</p>
+        <span class="btn play">Play now →</span>
+      </div>
+    </div>
+  </a>
 
-  <div class="section-title">
-    <h3>All games</h3>
-    <span class="count" id="count"></span>
+  <!-- All games -->
+  <div id="games">
+    <div class="section-head">
+      <h3>All games</h3>
+      <span class="count" id="game-count">1 game · more nightly</span>
+    </div>
+
+    <div class="filters" id="filters">
+      <button class="filter active" data-filter="all">All</button>
+      <button class="filter" data-filter="quiz">Quizzes</button>
+      <button class="filter" data-filter="reflex">Reflex</button>
+      <button class="filter" data-filter="puzzle">Puzzle</button>
+      <button class="filter" data-filter="generator">Generators</button>
+    </div>
+
+    <div class="grid" id="grid">
+      <!-- populated by JS -->
+    </div>
   </div>
-  <div class="grid" id="grid"></div>
+
+  <!-- About -->
+  <section class="about" id="about">
+    <h3>What is this? 🎰</h3>
+    <p>
+      Every night, an AI named Jack builds a brand-new, shareable mini-game and ships it here.
+      Single HTML files. Mobile-first. Designed to be played, beaten, and bragged about in under 5 minutes.
+      Made with love by <a href="https://nsprd.com" target="_blank" rel="noopener">Inspired Design</a>.
+    </p>
+  </section>
 
   <footer>
-    <p>Made with ✨ + caffeine. <a href="https://nsprd.com">nsprd.com</a></p>
+    © <span id="year"></span> nsprd · Built overnight · <a href="https://nsprd.com" target="_blank" rel="noopener">nsprd.com</a>
   </footer>
+
 </div>
 
 <script>
-async function load(){
-  const res = await fetch('/games.json', {cache:'no-store'});
-  const data = await res.json();
+  // ---------- Game data ----------
+  const GAMES = [
+    {
+      slug: "pride-flag-quiz",
+      title: "Which Pride Flag Are You? 🏳️‍🌈",
+      hook: "8 questions, 9 flags, one fabulous result.",
+      tags: ["quiz", "result"],
+      category: "quiz",
+      image: "/pride-flag-quiz-tile.png",
+      date: "2026-05-23",
+      duration: "2 min",
+      featured: true
+    },
+    {
+      slug: "summer-aura",
+      title: "Summer Aura ☀️✨",
+      hook: "7 questions. Discover your Summer 2026 vibe.",
+      tags: ["quiz", "result", "summer"],
+      category: "quiz",
+      image: "/summer-aura/og.png",
+      date: "2026-05-23",
+      duration: "1 min",
+      featured: false
+    }
+    // future games drop in here — prepend new entries; set featured:true on the new one and false on the previous featured
+  ];
 
-  const games = data.games || [];
-  const featuredSlug = data.featured;
-  const featured = games.find(g => g.slug === featuredSlug) || games[0];
-  const rest = games.filter(g => g !== featured);
+  const grid = document.getElementById('grid');
+  const filters = document.querySelectorAll('.filter');
+  const count = document.getElementById('game-count');
 
-  const $f = document.getElementById('featured-slot');
-  if (featured){
-    $f.innerHTML = `
-      <div class="featured">
-        <a class="art" href="${featured.url}" aria-label="Play ${featured.name}" style="background-image:url('${featured.image}')"></a>
-        <div class="meta">
-          <span class="badge-of-the-day">⭐️ Game of the Day</span>
-          <h2>${escapeHtml(featured.name)} ${featured.emoji||''}</h2>
-          <p class="tag">${escapeHtml(featured.tagline)}</p>
-          <a class="play-cta" href="${featured.url}">Play now →</a>
-        </div>
-      </div>
-    `;
-  }
-
-  const $grid = document.getElementById('grid');
-  const $count = document.getElementById('count');
-  $count.textContent = `${games.length} game${games.length===1?'':'s'}`;
-
-  if (rest.length === 0){
-    $grid.innerHTML = `<div class="empty">More games dropping nightly. Bookmark this page. 🌙</div>`;
-  } else {
-    $grid.innerHTML = rest.map(g => `
-      <a class="tile" href="${g.url}">
-        <div class="art" style="background-image:url('${g.image}')"></div>
-        <div class="body">
-          <div class="name"><span class="ico">${g.emoji||'🎮'}</span> ${escapeHtml(g.name)}</div>
-          <p class="one">${escapeHtml(g.tagline)}</p>
-          <div class="tags">
-            ${(g.tags||[]).map(t=>`<span>#${escapeHtml(t)}</span>`).join('')}
+  function render(filter = 'all') {
+    grid.innerHTML = '';
+    const visible = filter === 'all' ? GAMES : GAMES.filter(g => g.category === filter);
+    visible.forEach((g, i) => {
+      const tile = document.createElement('a');
+      tile.href = '/' + g.slug;
+      tile.className = 'tile fade-up';
+      tile.innerHTML = `
+        <div class="tile-image"><img src="${g.image}" alt="${g.title}" loading="lazy"/></div>
+        <div class="tile-body">
+          <div class="tile-meta">
+            ${g.tags.map(t => `<span class="tag">${t}</span>`).join('')}
           </div>
-        </div>
-      </a>
-    `).join('');
+          <h4>${g.title}</h4>
+          <p>${g.hook}</p>
+          <div class="tile-foot">
+            <span>${formatDate(g.date)} · ${g.duration}</span>
+            <span class="tile-play">Play →</span>
+          </div>
+        </div>`;
+      grid.appendChild(tile);
+    });
+
+    // always show a "coming soon" tile so the grid feels alive
+    const soon = document.createElement('div');
+    soon.className = 'tile coming fade-up';
+    soon.innerHTML = `
+      <div class="tile-image">COMING<br/>TOMORROW</div>
+      <div class="tile-body">
+        <h4>A new game every night 🌙</h4>
+        <p>Jack ships overnight. Check back tomorrow for something fresh.</p>
+        <div class="tile-foot"><span>Daily · ~2 min</span><span class="tile-play">Soon</span></div>
+      </div>`;
+    grid.appendChild(soon);
+
+    count.textContent = `${visible.length} game${visible.length === 1 ? '' : 's'} · more nightly`;
   }
-}
 
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
+  function formatDate(iso) {
+    const d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
 
-load().catch(err => {
-  document.getElementById('grid').innerHTML = `<div class="empty">Couldn't load games. (${err.message})</div>`;
-});
+  filters.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filters.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      render(btn.dataset.filter);
+    });
+  });
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+  render();
 </script>
 </body>
 </html>

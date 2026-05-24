@@ -3,16 +3,14 @@
   "trailingSlash": false,
   "headers": [
     {
-      "source": "/games.json",
+      "source": "/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=0, s-maxage=60, must-revalidate" }
-      ]
-    },
-    {
-      "source": "/(.*).png",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=86400, s-maxage=86400" }
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
       ]
     }
+  ],
+  "rewrites": [
+    { "source": "/pride-flag-quiz", "destination": "/pride-flag-quiz/index.html" }
   ]
 }

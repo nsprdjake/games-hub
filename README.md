@@ -1,93 +1,53 @@
-# games.nsprd.com 🎮
+# nsprd games hub 🎮
 
-Daily-ish shareable mini-games. Single-player, mobile-first, no signup.
-Deployed via Vercel. Live at **https://games.nsprd.com**.
+`games.nsprd.com` — a daily shareable mini-game, freshly built overnight.
 
 ## Structure
 
-```
-games-hub/
-├── index.html         # Hub landing page (loads games.json)
-├── games.json         # ⭐ Single source of truth — list of games
-├── vercel.json        # Static config (cleanUrls, cache headers)
-├── og.png             # Hub OG image (optional)
-└── <slug>/            # One folder per game
-    ├── index.html     # Self-contained game (single file)
-    └── og.png         # Game OG image
-```
+- `index.html` — the hub landing page (featured game + grid)
+- `og.png` — hub social share image
+- `pride-flag-quiz/` — game 1 (folder is added here at build time so the hub can serve `/pride-flag-quiz` as a subpath)
+- `vercel.json` — clean URLs + rewrite for subpath games
 
-Each game lives at `/<slug>/` (e.g. `/summer-aura/`). The hub auto-renders
-all games listed in `games.json`.
+## Adding a new game (nightly agents — read this)
 
-## ✨ How to add a new game (for nightly agents)
-
-1. **Create your game folder** with a self-contained `index.html`:
-   ```
-   games-hub/<your-slug>/index.html
-   games-hub/<your-slug>/og.png   # 1200x630 OG image
-   ```
-   Game must be:
-   - Single HTML file (inline CSS/JS, no build step)
-   - Mobile-first responsive
-   - Have share buttons (Twitter intent + `navigator.share` fallback)
-   - Footer link back to `https://games.nsprd.com`
-   - OG meta tags pointing to `https://games.nsprd.com/<slug>/og.png`
-
-2. **Add an entry to `games.json`** — prepend to the `games` array:
-   ```json
+1. **Drop your game folder** at `/<slug>/index.html`. Must be a single, self-contained
+   HTML file (inline CSS/JS, no build step). Include an `og.png` (1200x630) in the
+   same folder for social previews.
+2. **Add a tile** to the `GAMES` array near the bottom of `index.html`. Schema:
+   ```js
    {
-     "slug": "your-slug",
-     "name": "Your Game Name",
-     "tagline": "One-liner under ~70 chars.",
-     "emoji": "🎯",
-     "image": "/your-slug/og.png",
-     "color": "#hexcolor",
-     "tags": ["genre", "vibe"],
-     "published": "YYYY-MM-DD",
-     "url": "/your-slug/"
+     slug: "my-slug",          // matches folder name
+     title: "My Game 🎯",      // shown on tile + featured
+     hook: "One-liner ≤ 70ch.",
+     tags: ["quiz", "result"], // free-form; surface filters: quiz, reflex, puzzle, generator
+     category: "quiz",         // one of: quiz, reflex, puzzle, generator (controls filter)
+     image: "/my-slug/og.png",
+     date: "YYYY-MM-DD",
+     duration: "2 min",
+     featured: true            // true = goes in the Today's Game slot
    }
    ```
-
-3. **Update `featured`** in `games.json` to your new slug if you want it
-   featured as "Game of the Day". Otherwise leave the previous featured.
-
-4. **Commit + push** to `main`. Vercel auto-deploys.
-   (If you're using a one-shot deploy: `vercel --prod --token $VERCEL_TOKEN --yes`.)
-
+   **Prepend** your entry, and flip the previous `featured:true` → `featured:false`.
+3. **Update the featured block** in `index.html` (the `<a href="/..." class="featured">`
+   markup, plus the `featured-flag` label) to point at your new game.
+4. **Commit + push** to `main`. If Vercel git is wired it auto-deploys; otherwise:
+   ```bash
+   vercel --prod --token $VERCEL_TOKEN --yes
+   ```
 5. **DNS** is already wired (`games.nsprd.com` → `cname.vercel-dns.com`).
-   No DNS work needed for sub-paths.
 
-## Local preview
-
-```bash
-cd games-hub
-python3 -m http.server 8000
-# open http://localhost:8000
-```
+### Game requirements
+- Mobile-first responsive
+- Share buttons (Twitter intent + `navigator.share`)
+- Footer link back to `https://games.nsprd.com`
+- OG meta tags with absolute URLs to `https://games.nsprd.com/<slug>/og.png`
+- No backend, no env vars, no external API keys
 
 ## Deploy
 
-```bash
-cd games-hub
-vercel --prod --token <token> --yes
+```
+vercel --prod --token $VERCEL_TOKEN --yes
 ```
 
-The Vercel project is `games-hub` under team `jake-8792`. First deploy
-will create it; subsequent deploys re-use `.vercel/project.json`.
-
-## Design system (loose)
-
-- **Palette**: gradient pink (#ff6ad5) → peach (#ffb86b) → gold (#ffd166) → sky (#5ee0ff) on deep purple (#1a0633)
-- **Vibe**: maximalist Y2K, glassy cards, soft glow shadows, big rounded corners
-- **Fonts**: native system stack — keep it instant on mobile
-- **Sparkles**: encouraged ✨
-
-But every game is allowed (encouraged) to break the system if it has a stronger
-visual identity. The hub is the unifier.
-
-## Conventions
-
-- Game URLs are clean (`/summer-aura`) — `vercel.json` handles `cleanUrls`
-- Result/state URLs are encouraged via querystrings (e.g. `?aura=poolWitch`) so links shared from a result page show that result
-- All assets are static — no backend, no environment variables in games
-- Profanity should be tasteful, never punching down. We share these.
+DNS: `games.nsprd.com` → `cname.vercel-dns.com` (Dreamhost)
