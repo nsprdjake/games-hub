@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+<title>Hot Dog or Not? 🌭 — The Memorial Day Weekend Reflex Test</title>
+<meta name="description" content="20 rounds. 4 seconds each. Hot dog… or not? Settle the great American food debate, one snap judgment at a time." />
+<meta name="theme-color" content="#c9311c" />
+
+<!-- Open Graph -->
+<meta property="og:title" content="Hot Dog or Not? 🌭" />
+<meta property="og:description" content="20 rounds. 4 seconds each. Settle the great hot dog debate. Can you beat 18/20?" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://games.nsprd.com/hot-dog-or-not" />
+<meta property="og:image" content="https://games.nsprd.com/hot-dog-or-not/og.png" />
+<meta property="og:image:width" content="1536" />
+<meta property="og:image:height" content="1024" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Hot Dog or Not? 🌭" />
+<meta name="twitter:description" content="Memorial Day reflex test. Can you call it in 4 seconds?" />
+<meta name="twitter:image" content="https://games.nsprd.com/hot-dog-or-not/og.png" />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🌭%3C/text%3E%3C/svg%3E" />
+
+<style>
+  :root {
+    --bg-1: #2a0c08;
+    --bg-2: #5a1a10;
+    --ink: #fff8ef;
+    --hot: #ffcf3a;          /* mustard yellow */
+    --hot-2: #ffb000;
+    --not: #1a1a2e;
+    --not-2: #2c2c4f;
+    --red: #e63a26;
+    --red-deep: #c9311c;
+    --green: #4ade80;
+    --gray: rgba(255, 248, 239, 0.55);
+    --card-bg: #fff8ef;
+    --card-ink: #1a0d08;
+    --shadow: 0 18px 50px rgba(0,0,0,0.45);
+    --radius: 22px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0;
+    min-height: 100%;
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(255,176,0,0.25), transparent 55%),
+      radial-gradient(ellipse at 80% 100%, rgba(230,58,38,0.3), transparent 55%),
+      linear-gradient(180deg, var(--bg-1), var(--bg-2));
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.45;
+    overflow-x: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  /* Subtle checkered overlay (picnic blanket nod) */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(45deg, rgba(255,255,255,0.025) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.025) 75%),
+      linear-gradient(45deg, rgba(255,255,255,0.025) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.025) 75%);
+    background-size: 56px 56px;
+    background-position: 0 0, 28px 28px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 22px 18px 40px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ---------- Header / topbar ---------- */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .brand {
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--hot);
+    text-decoration: none;
+  }
+  .brand::before { content: '🎰 '; }
+  .home {
+    font-size: 12px;
+    color: var(--gray);
+    text-decoration: none;
+    padding: 6px 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 999px;
+  }
+
+  /* ---------- Intro screen ---------- */
+  .screen {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+  }
+  .screen.active { display: flex; }
+
+  .intro h1 {
+    font-size: clamp(38px, 9vw, 64px);
+    line-height: 0.95;
+    margin: 8px 0 6px;
+    letter-spacing: -0.02em;
+    font-weight: 900;
+    text-shadow: 4px 4px 0 var(--red-deep);
+  }
+  .intro h1 .or { color: var(--hot); }
+  .intro h1 .not { color: #fff; }
+  .intro .tag {
+    color: var(--gray);
+    font-size: 16px;
+    margin: 0 0 26px;
+  }
+  .rules {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius);
+    padding: 18px 18px 14px;
+    margin-bottom: 22px;
+  }
+  .rules h3 {
+    margin: 0 0 10px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--hot);
+  }
+  .rules ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 15px;
+  }
+  .rules li { margin-bottom: 6px; }
+
+  .start-btn {
+    display: block;
+    width: 100%;
+    padding: 20px;
+    border: none;
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, var(--hot), var(--hot-2));
+    color: var(--card-ink);
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    box-shadow: 0 10px 0 var(--red-deep), var(--shadow);
+    transition: transform 0.08s, box-shadow 0.08s;
+  }
+  .start-btn:active {
+    transform: translateY(6px);
+    box-shadow: 0 4px 0 var(--red-deep), var(--shadow);
+  }
+
+  .credits {
+    text-align: center;
+    margin-top: 18px;
+    color: var(--gray);
+    font-size: 12px;
+  }
+  .credits a { color: var(--hot); text-decoration: none; }
+
+  /* ---------- Play screen ---------- */
+  .hud {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .hud .score, .hud .round { font-size: 14px; color: var(--gray); }
+  .hud .round { text-align: right; }
+  .timer-shell {
+    width: 56px; height: 56px;
+    position: relative;
+    margin: 0 auto;
+  }
+  .timer-shell svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .timer-shell .ring-bg {
+    fill: none; stroke: rgba(255,255,255,0.12); stroke-width: 6;
+  }
+  .timer-shell .ring-fg {
+    fill: none; stroke: var(--hot); stroke-width: 6; stroke-linecap: round;
+    transition: stroke-dashoffset 0.1s linear, stroke 0.2s;
+  }
+  .timer-shell.danger .ring-fg { stroke: var(--red); }
+  .timer-num {
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    font-weight: 800; font-size: 20px;
+    color: var(--ink);
+  }
+
+  .card {
+    flex: 1;
+    background: var(--card-bg);
+    color: var(--card-ink);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: var(--shadow);
+    min-height: 320px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s, background 0.25s, color 0.25s;
+  }
+  .card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(45deg, rgba(0,0,0,0.03) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.03) 75%),
+      linear-gradient(45deg, rgba(0,0,0,0.03) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.03) 75%);
+    background-size: 32px 32px;
+    background-position: 0 0, 16px 16px;
+    pointer-events: none;
+  }
+  .card.flash-right { background: #d6f5d6; }
+  .card.flash-wrong { background: #fcd5cf; }
+
+  .item-emoji {
+    font-size: clamp(90px, 22vw, 140px);
+    line-height: 1;
+    margin-bottom: 16px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+    position: relative;
+    z-index: 1;
+  }
+  .item-name {
+    font-size: clamp(22px, 5.5vw, 28px);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    position: relative;
+    z-index: 1;
+  }
+  .item-sub {
+    color: rgba(26,13,8,0.55);
+    font-size: 13px;
+    margin-top: 6px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .answer-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .answer {
+    border: none;
+    border-radius: var(--radius);
+    padding: 22px 10px;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    box-shadow: 0 8px 0 rgba(0,0,0,0.4), var(--shadow);
+    transition: transform 0.08s, box-shadow 0.08s, opacity 0.2s;
+  }
+  .answer:active {
+    transform: translateY(5px);
+    box-shadow: 0 3px 0 rgba(0,0,0,0.4), var(--shadow);
+  }
+  .answer:disabled { opacity: 0.5; cursor: default; }
+  .answer.yes {
+    background: linear-gradient(180deg, var(--hot), var(--hot-2));
+    color: var(--card-ink);
+  }
+  .answer.no {
+    background: linear-gradient(180deg, #2c2c4f, #1a1a2e);
+    color: #fff;
+  }
+
+  .verdict {
+    margin-top: 12px;
+    text-align: center;
+    font-weight: 700;
+    min-height: 22px;
+    font-size: 15px;
+    color: var(--ink);
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .verdict.show { opacity: 1; }
+  .verdict.right { color: var(--green); }
+  .verdict.wrong { color: #ffb7af; }
+
+  /* ---------- Result screen ---------- */
+  .result {
+    text-align: center;
+  }
+  .result .score-big {
+    font-size: clamp(72px, 18vw, 120px);
+    font-weight: 900;
+    line-height: 1;
+    margin: 18px 0 4px;
+    background: linear-gradient(180deg, var(--hot), var(--red));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 4px 30px rgba(255,176,0,0.4);
+  }
+  .result .score-of { color: var(--gray); font-size: 16px; margin-bottom: 14px; }
+  .result .title {
+    font-size: clamp(26px, 6.5vw, 36px);
+    font-weight: 900;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .result .blurb {
+    color: var(--ink);
+    opacity: 0.85;
+    font-size: 16px;
+    max-width: 420px;
+    margin: 0 auto 22px;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 0 0 22px;
+  }
+  .stat {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 12px 6px;
+  }
+  .stat .n { font-size: 22px; font-weight: 900; color: var(--hot); }
+  .stat .l { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  .action-row {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    margin-top: 8px;
+  }
+  .action {
+    padding: 16px 18px;
+    border-radius: var(--radius);
+    border: none;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    display: block;
+  }
+  .action.primary {
+    background: linear-gradient(180deg, var(--hot), var(--hot-2));
+    color: var(--card-ink);
+    box-shadow: 0 6px 0 var(--red-deep);
+  }
+  .action.primary:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--red-deep); }
+  .action.ghost {
+    background: rgba(255,255,255,0.07);
+    color: var(--ink);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .share-text {
+    margin-top: 16px;
+    padding: 14px;
+    background: rgba(0,0,0,0.25);
+    border: 1px dashed rgba(255,255,255,0.15);
+    border-radius: 14px;
+    font-size: 13px;
+    color: var(--ink);
+    text-align: left;
+    white-space: pre-wrap;
+    line-height: 1.5;
+  }
+
+  .review {
+    margin-top: 22px;
+    text-align: left;
+  }
+  .review h3 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--hot);
+    margin-bottom: 10px;
+  }
+  .review-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+  .review-row .emj { font-size: 26px; }
+  .review-row .nm { flex: 1; font-weight: 600; }
+  .review-row .mk {
+    font-size: 18px;
+    width: 28px;
+    text-align: center;
+  }
+  .review-row.ok { border-color: rgba(74,222,128,0.3); }
+  .review-row.bad { border-color: rgba(230,58,38,0.4); }
+  .review-row .truth {
+    font-size: 12px;
+    color: var(--gray);
+    margin-left: 4px;
+  }
+
+  /* Hide on small if scroll feels long */
+  footer {
+    text-align: center;
+    color: var(--gray);
+    font-size: 11px;
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  footer a { color: var(--hot); text-decoration: none; }
+
+  /* Confetti */
+  .confetti {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 50;
+    overflow: hidden;
+  }
+  .confetti span {
+    position: absolute;
+    top: -20px;
+    width: 10px; height: 14px;
+    opacity: 0.95;
+    animation: fall linear forwards;
+  }
+  @keyframes fall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0.7; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <a class="brand" href="/">nsprd games</a>
+    <a class="home" href="/">← All games</a>
+  </div>
+
+  <!-- ============ INTRO ============ -->
+  <section class="screen intro active" id="screen-intro">
+    <h1><span class="not">HOT DOG</span><br/><span class="or">OR NOT?</span></h1>
+    <p class="tag">A Memorial Day weekend reflex test. Settle the great American food debate — one snap judgment at a time. 🌭</p>
+
+    <div class="rules">
+      <h3>How it works</h3>
+      <ul>
+        <li><strong>20 rounds.</strong> 4 seconds each.</li>
+        <li>Is it a hot dog? <strong>🌭 HOT DOG</strong> or <strong>❌ NOT</strong>.</li>
+        <li>Faster answers = bonus points.</li>
+        <li>Beat <strong>18/20</strong> for hot dog god status.</li>
+      </ul>
+    </div>
+
+    <button class="start-btn" id="start-btn">START THE COOKOUT 🔥</button>
+
+    <p class="credits">Built overnight at <a href="https://games.nsprd.com">games.nsprd.com</a> · Memorial Day Weekend Edition</p>
+  </section>
+
+  <!-- ============ PLAY ============ -->
+  <section class="screen play" id="screen-play">
+    <div class="hud">
+      <div class="score">Score: <strong id="score">0</strong></div>
+      <div class="timer-shell" id="timer-shell">
+        <svg viewBox="0 0 60 60">
+          <circle class="ring-bg" cx="30" cy="30" r="26"/>
+          <circle class="ring-fg" id="ring-fg" cx="30" cy="30" r="26"
+            stroke-dasharray="163.4" stroke-dashoffset="0"/>
+        </svg>
+        <div class="timer-num" id="timer-num">4</div>
+      </div>
+      <div class="round">Round <strong id="round">1</strong>/20</div>
+    </div>
+
+    <div class="card" id="card">
+      <div class="item-emoji" id="item-emoji">🌭</div>
+      <div class="item-name" id="item-name">Hot Dog</div>
+      <div class="item-sub" id="item-sub"></div>
+    </div>
+
+    <div class="answer-row">
+      <button class="answer no" id="ans-no" data-ans="no">❌ NOT</button>
+      <button class="answer yes" id="ans-yes" data-ans="yes">🌭 HOT DOG</button>
+    </div>
+
+    <div class="verdict" id="verdict">&nbsp;</div>
+  </section>
+
+  <!-- ============ RESULT ============ -->
+  <section class="screen result" id="screen-result">
+    <div class="score-big" id="result-score">0</div>
+    <div class="score-of">out of 20</div>
+    <h2 class="title" id="result-title">The Casual Griller</h2>
+    <p class="blurb" id="result-blurb">Solid effort.</p>
+
+    <div class="stats">
+      <div class="stat"><div class="n" id="stat-right">0</div><div class="l">Right</div></div>
+      <div class="stat"><div class="n" id="stat-wrong">0</div><div class="l">Wrong</div></div>
+      <div class="stat"><div class="n" id="stat-speed">0</div><div class="l">Avg sec</div></div>
+    </div>
+
+    <div class="action-row">
+      <button class="action primary" id="share-btn">📤 Share my score</button>
+      <button class="action ghost" id="play-again">🔁 Play again</button>
+      <a class="action ghost" href="/">More games</a>
+    </div>
+
+    <div class="share-text" id="share-preview"></div>
+
+    <div class="review">
+      <h3>The Verdict Sheet</h3>
+      <div id="review-list"></div>
+    </div>
+
+    <footer>
+      <p>🎰 Made by <a href="https://nsprd.com">Inspired Design</a> · A new mini-game every day at <a href="https://games.nsprd.com">games.nsprd.com</a></p>
+    </footer>
+  </section>
+
+</div>
+
+<div class="confetti" id="confetti"></div>
+
+<script>
+/* ============================================================
+   HOT DOG OR NOT? 🌭
+   Memorial Day Weekend Edition — nsprd games
+   ============================================================ */
+
+/*
+ * Each item has:
+ *   name: display string
+ *   emoji: visual
+ *   sub: optional clarifier (kept short)
+ *   isHotDog: true|false (the canonical, defensible answer)
+ *   why: one-liner explanation for the review sheet
+ */
+const ITEMS = [
+  // OBVIOUS YES
+  { name: "Classic Beef Frank in a Bun", emoji: "🌭", sub: "mustard, plain bun", isHotDog: true, why: "The platonic ideal." },
+  { name: "Chicago Dog (loaded)", emoji: "🌭", sub: "pickle spear, sport peppers, neon relish", isHotDog: true, why: "Drag it through the garden — still a hot dog." },
+  { name: "Chili Cheese Dog", emoji: "🌭", sub: "Sonic-style", isHotDog: true, why: "Chili doesn't disqualify it." },
+  { name: "Bagel Dog", emoji: "🥯", sub: "frank baked in a bagel", isHotDog: true, why: "Hot dog hidden in carbs is still a hot dog." },
+  { name: "Polish Sausage on a Bun", emoji: "🌭", sub: "Costco food court", isHotDog: true, why: "Wider casing, longer dog — but yes, hot dog family." },
+
+  // OBVIOUS NO
+  { name: "Corn Dog", emoji: "🌽", sub: "frank in cornmeal batter, on a stick", isHotDog: false, why: "On a stick? Not a hot dog. It's a corn dog." },
+  { name: "Pigs in a Blanket", emoji: "🥐", sub: "cocktail wieners in dough", isHotDog: false, why: "Tiny wieners, no bun, party app. NOT." },
+  { name: "Bratwurst on a Pretzel Bun", emoji: "🥨", sub: "Oktoberfest energy", isHotDog: false, why: "A brat is its own thing. Sausage ≠ hot dog." },
+  { name: "Lobster Roll", emoji: "🦞", sub: "split-top bun, butter, lobster", isHotDog: false, why: "Right bun. Wrong species." },
+  { name: "Banh Mi", emoji: "🥖", sub: "Vietnamese baguette sandwich", isHotDog: false, why: "Baguette, pâté, pickled veg. Sandwich, not hot dog." },
+  { name: "Sausage Roll", emoji: "🥟", sub: "British, pastry-wrapped", isHotDog: false, why: "Pastry. Pub snack. Not a hot dog." },
+  { name: "Italian Sausage with Peppers", emoji: "🌶️", sub: "fennel sausage, hoagie roll", isHotDog: false, why: "Different beast. Hoagie, not bun." },
+  { name: "Cheese Stick", emoji: "🧀", sub: "string cheese", isHotDog: false, why: "Be serious." },
+  { name: "Hamburger", emoji: "🍔", sub: "ground beef patty", isHotDog: false, why: "It is, in fact, a sandwich. Not a hot dog." },
+  { name: "Taco", emoji: "🌮", sub: "tortilla, meat, toppings", isHotDog: false, why: "Folded carb pouch. Not a hot dog." },
+
+  // EDGE CASES (defensible calls, often spicy)
+  { name: "Hot Dog cut in half lengthwise", emoji: "🌭", sub: "still in a bun", isHotDog: true, why: "Bisecting the meat doesn't change the meal. Still a hot dog." },
+  { name: "Hot Dog with no bun, on a plate", emoji: "🍽️", sub: "fork-and-knife situation", isHotDog: true, why: "Cooked frank is a hot dog with or without bun. The dog *is* the hot dog." },
+  { name: "Sushi Roll shaped like a hot dog", emoji: "🍣", sub: "rice + nori, no frank", isHotDog: false, why: "Looking like a hot dog ≠ being a hot dog." },
+  { name: "Korean Corn Dog (cheese-filled, sugar-coated)", emoji: "🍡", sub: "on a stick, batter-fried", isHotDog: false, why: "Still a corn dog (variant). Stick + batter rule." },
+  { name: "Hot Dog in a tortilla", emoji: "🌯", sub: "wrapped, no bun", isHotDog: true, why: "The frank is the soul. Bread vessel can vary. Sonoran-style says yes." },
+
+  // BONUS POOL (will randomize from full pool)
+  { name: "Wiener Schnitzel", emoji: "🥩", sub: "breaded veal cutlet", isHotDog: false, why: "Same name root, totally different food. Not a hot dog." },
+  { name: "Slim Jim", emoji: "🥓", sub: "shelf-stable meat stick", isHotDog: false, why: "Jerky-adjacent. Not a hot dog." },
+  { name: "Pizza Hot Dog (frank baked into pizza)", emoji: "🍕", sub: "stuffed crust dog", isHotDog: false, why: "It became pizza. The pizza ate it." },
+  { name: "Foot-long at the ballpark", emoji: "⚾", sub: "frank, bun, ketchup, mustard", isHotDog: true, why: "Length ≠ disqualifier. Hot dog." },
+  { name: "Vegan 'Not Dog'", emoji: "🌱", sub: "plant-based frank in a bun", isHotDog: true, why: "If it walks like a hot dog and sits in a bun like a hot dog… controversial, but yes. The form makes the dog." },
+  { name: "Hot Dog Soup (cut up in broth)", emoji: "🍲", sub: "Korean budae jjigae", isHotDog: false, why: "It dissolved into soup. The soup is now the meal." },
+  { name: "Toaster Strudel", emoji: "🧁", sub: "icing pastry", isHotDog: false, why: "Friend, no." },
+  { name: "Hot Dog with mayonnaise", emoji: "🌭", sub: "mayo, no mustard", isHotDog: true, why: "Topping crimes ≠ disqualification. Still a hot dog." }
+];
+
+/*
+ * Result tiers — title + blurb based on score
+ */
+const TIERS = [
+  { min: 19, title: "🌭 Hot Dog God",        blurb: "You can identify a frank in a lineup. Memorial Day was made for you. Get behind the grill." },
+  { min: 16, title: "🔥 Grill Captain",     blurb: "Sharp eye, fast trigger. You know your wieners. Crack open the buns." },
+  { min: 12, title: "🍞 Casual Griller",    blurb: "Solid weekend warrior. A few edge cases got you — but you'd never confuse a corn dog for the real deal." },
+  { min: 8,  title: "🌽 Corn Dog Confused", blurb: "Stick or no stick? Bun or no bun? The American canon is fuzzy in your head and that's okay." },
+  { min: 4,  title: "🥨 Brat Believer",     blurb: "You think every sausage is a hot dog. Bold. Wrong. But bold." },
+  { min: 0,  title: "🦞 Lobster Roller",    blurb: "You may need a Memorial Day intervention. The bun is not the dog. Repeat: the bun is not the dog." }
+];
+
+/* ---------- State ---------- */
+const TOTAL_ROUNDS = 20;
+const TIME_PER_ROUND = 4; // seconds
+const STATE = {
+  pool: [],
+  current: null,
+  round: 0,
+  score: 0,
+  right: 0,
+  wrong: 0,
+  totalTime: 0,
+  log: [],
+  timerInt: null,
+  timeLeft: TIME_PER_ROUND,
+  roundStart: 0,
+  answered: false
+};
+
+/* ---------- DOM ---------- */
+const $ = (id) => document.getElementById(id);
+const screens = {
+  intro: $('screen-intro'),
+  play: $('screen-play'),
+  result: $('screen-result')
+};
+
+function show(name) {
+  Object.values(screens).forEach(s => s.classList.remove('active'));
+  screens[name].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+/* ---------- Game flow ---------- */
+function startGame() {
+  // Shuffle pool, pick TOTAL_ROUNDS items, ensuring a healthy yes/no mix
+  const yes = ITEMS.filter(i => i.isHotDog);
+  const no = ITEMS.filter(i => !i.isHotDog);
+  shuffle(yes); shuffle(no);
+
+  // Roughly 50/50 mix; with edge cases, lean a touch toward NO for spice
+  const yesCount = Math.min(yes.length, 10);
+  const noCount = Math.min(no.length, TOTAL_ROUNDS - yesCount);
+  STATE.pool = shuffle([...yes.slice(0, yesCount), ...no.slice(0, noCount)]).slice(0, TOTAL_ROUNDS);
+
+  STATE.round = 0;
+  STATE.score = 0;
+  STATE.right = 0;
+  STATE.wrong = 0;
+  STATE.totalTime = 0;
+  STATE.log = [];
+
+  $('score').textContent = '0';
+  show('play');
+  nextRound();
+}
+
+function nextRound() {
+  STATE.round++;
+  if (STATE.round > TOTAL_ROUNDS) return endGame();
+
+  STATE.current = STATE.pool[STATE.round - 1];
+  STATE.answered = false;
+  STATE.timeLeft = TIME_PER_ROUND;
+  STATE.roundStart = performance.now();
+
+  $('round').textContent = STATE.round;
+  $('item-emoji').textContent = STATE.current.emoji;
+  $('item-name').textContent = STATE.current.name;
+  $('item-sub').textContent = STATE.current.sub || '';
+  $('verdict').textContent = '\u00A0';
+  $('verdict').className = 'verdict';
+  $('card').classList.remove('flash-right', 'flash-wrong');
+  $('ans-yes').disabled = false;
+  $('ans-no').disabled = false;
+
+  // Timer ring
+  const ring = $('ring-fg');
+  const circ = 2 * Math.PI * 26;
+  ring.setAttribute('stroke-dasharray', circ);
+  ring.setAttribute('stroke-dashoffset', '0');
+  $('timer-shell').classList.remove('danger');
+  $('timer-num').textContent = TIME_PER_ROUND;
+
+  clearInterval(STATE.timerInt);
+  STATE.timerInt = setInterval(() => {
+    const elapsed = (performance.now() - STATE.roundStart) / 1000;
+    STATE.timeLeft = Math.max(0, TIME_PER_ROUND - elapsed);
+    const frac = STATE.timeLeft / TIME_PER_ROUND;
+    ring.setAttribute('stroke-dashoffset', String(circ * (1 - frac)));
+    $('timer-num').textContent = Math.ceil(STATE.timeLeft);
+    if (STATE.timeLeft <= 1.2) $('timer-shell').classList.add('danger');
+    if (STATE.timeLeft <= 0 && !STATE.answered) {
+      submit(null);
+    }
+  }, 80);
+}
+
+function submit(userYes) {
+  if (STATE.answered) return;
+  STATE.answered = true;
+  clearInterval(STATE.timerInt);
+  $('ans-yes').disabled = true;
+  $('ans-no').disabled = true;
+
+  const elapsed = (performance.now() - STATE.roundStart) / 1000;
+  const item = STATE.current;
+  const correct = userYes === item.isHotDog;
+  const timeOut = userYes === null;
+
+  // Score: 5 base for correct + speed bonus up to +5 (faster = more)
+  let pts = 0;
+  if (correct && !timeOut) {
+    pts = 5;
+    const speedBonus = Math.max(0, Math.round((1 - elapsed / TIME_PER_ROUND) * 5));
+    pts += speedBonus;
+    STATE.right++;
+    STATE.score += pts;
+  } else {
+    STATE.wrong++;
+  }
+  STATE.totalTime += timeOut ? TIME_PER_ROUND : elapsed;
+  STATE.log.push({ item, userYes, correct, timeOut, elapsed, pts });
+
+  $('score').textContent = STATE.score;
+
+  // Visual feedback
+  const card = $('card');
+  const verdict = $('verdict');
+  if (timeOut) {
+    card.classList.add('flash-wrong');
+    verdict.textContent = `⏰ Out of time — it was ${item.isHotDog ? 'HOT DOG 🌭' : 'NOT ❌'}. ${item.why}`;
+    verdict.className = 'verdict show wrong';
+  } else if (correct) {
+    card.classList.add('flash-right');
+    verdict.textContent = `✅ +${pts} — ${item.why}`;
+    verdict.className = 'verdict show right';
+  } else {
+    card.classList.add('flash-wrong');
+    verdict.textContent = `❌ It was ${item.isHotDog ? 'HOT DOG 🌭' : 'NOT'}. ${item.why}`;
+    verdict.className = 'verdict show wrong';
+  }
+
+  setTimeout(nextRound, 1200);
+}
+
+function endGame() {
+  const score = STATE.right; // out of 20 for the headline
+  $('result-score').textContent = score;
+  const tier = TIERS.find(t => score >= t.min);
+  $('result-title').textContent = tier.title;
+  $('result-blurb').textContent = tier.blurb;
+  $('stat-right').textContent = STATE.right;
+  $('stat-wrong').textContent = STATE.wrong;
+  const avg = STATE.right + STATE.wrong > 0
+    ? (STATE.totalTime / (STATE.right + STATE.wrong)).toFixed(1)
+    : '0.0';
+  $('stat-speed').textContent = avg;
+
+  // Build review
+  const list = $('review-list');
+  list.innerHTML = '';
+  STATE.log.forEach(({ item, correct, timeOut, userYes }) => {
+    const row = document.createElement('div');
+    row.className = 'review-row ' + (correct ? 'ok' : 'bad');
+    const mk = correct ? '✅' : (timeOut ? '⏰' : '❌');
+    row.innerHTML = `
+      <span class="emj">${item.emoji}</span>
+      <span class="nm">${item.name} <span class="truth">— ${item.isHotDog ? 'hot dog' : 'not'}</span></span>
+      <span class="mk">${mk}</span>`;
+    list.appendChild(row);
+  });
+
+  // Share preview text
+  const shareText = buildShareText(score, tier);
+  $('share-preview').textContent = shareText;
+
+  show('result');
+  if (score >= 16) confetti();
+}
+
+function buildShareText(score, tier) {
+  return `I scored ${score}/20 on Hot Dog or Not? 🌭
+Verdict: ${tier.title}
+
+Can you do better? 👉 games.nsprd.com/hot-dog-or-not`;
+}
+
+/* ---------- Share ---------- */
+async function doShare() {
+  const score = STATE.right;
+  const tier = TIERS.find(t => score >= t.min);
+  const text = buildShareText(score, tier);
+  const url = 'https://games.nsprd.com/hot-dog-or-not';
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: 'Hot Dog or Not? 🌭', text, url });
+      return;
+    }
+  } catch (e) { /* fall through */ }
+  try {
+    await navigator.clipboard.writeText(text);
+    flashBtn($('share-btn'), '✅ Copied!');
+  } catch (e) {
+    const tw = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+    window.open(tw, '_blank', 'noopener');
+  }
+}
+
+function flashBtn(btn, txt) {
+  const orig = btn.textContent;
+  btn.textContent = txt;
+  setTimeout(() => { btn.textContent = orig; }, 1600);
+}
+
+/* ---------- Utils ---------- */
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function confetti() {
+  const root = $('confetti');
+  root.innerHTML = '';
+  const colors = ['#ffcf3a','#e63a26','#fff8ef','#4ade80','#ff7ab6'];
+  for (let i = 0; i < 90; i++) {
+    const s = document.createElement('span');
+    s.style.left = (Math.random()*100) + 'vw';
+    s.style.background = colors[i % colors.length];
+    s.style.animationDuration = (1.6 + Math.random()*1.8) + 's';
+    s.style.animationDelay = (Math.random()*0.4) + 's';
+    s.style.transform = `rotate(${Math.random()*360}deg)`;
+    root.appendChild(s);
+  }
+  setTimeout(() => { root.innerHTML = ''; }, 3500);
+}
+
+/* ---------- Wire up ---------- */
+$('start-btn').addEventListener('click', startGame);
+$('ans-yes').addEventListener('click', () => submit(true));
+$('ans-no').addEventListener('click', () => submit(false));
+$('share-btn').addEventListener('click', doShare);
+$('play-again').addEventListener('click', startGame);
+
+// Keyboard shortcuts for desktop
+document.addEventListener('keydown', (e) => {
+  if (screens.play.classList.contains('active') && !STATE.answered) {
+    if (e.key === 'ArrowLeft' || e.key === 'n' || e.key === 'N') submit(false);
+    if (e.key === 'ArrowRight' || e.key === 'y' || e.key === 'Y') submit(true);
+  }
+  if (e.key === 'Enter') {
+    if (screens.intro.classList.contains('active')) startGame();
+    if (screens.result.classList.contains('active')) startGame();
+  }
+});
+</script>
+</body>
+</html>

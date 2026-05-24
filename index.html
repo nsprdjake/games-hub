@@ -432,20 +432,20 @@
   </section>
 
   <!-- Featured -->
-  <a href="/pride-flag-quiz" class="featured" id="featured">
-    <div class="featured-flag">🏳️‍🌈 Today's Game · Pride 2026</div>
+  <a href="/hot-dog-or-not" class="featured" id="featured">
+    <div class="featured-flag">🌭 Today's Game · Memorial Day Weekend</div>
     <div class="featured-grid">
       <div class="featured-image">
-        <img src="/pride-flag-quiz-tile.png" alt="Which Pride Flag Are You?" loading="lazy" />
+        <img src="/hot-dog-or-not/og.png" alt="Hot Dog or Not?" loading="lazy" />
       </div>
       <div class="featured-body">
         <div class="featured-meta">
-          <span class="tag pink">Quiz</span>
-          <span class="tag">Result-based</span>
+          <span class="tag pink">Reflex</span>
+          <span class="tag">Score-based</span>
           <span class="tag cyan">2 min</span>
         </div>
-        <h2>Which Pride Flag Are You? 🏳️‍🌈</h2>
-        <p class="one-liner">Eight questions. One fabulous result. Nine real Pride flags. Find your vibe and share the love.</p>
+        <h2>Hot Dog or Not? 🌭</h2>
+        <p class="one-liner">20 rounds. 4 seconds each. Settle the great American food debate — one snap judgment at a time. Beat 18/20 for hot dog god status.</p>
         <span class="btn play">Play now →</span>
       </div>
     </div>
@@ -491,6 +491,17 @@
   // ---------- Game data ----------
   const GAMES = [
     {
+      slug: "hot-dog-or-not",
+      title: "Hot Dog or Not? 🌭",
+      hook: "20 rounds. 4 seconds each. Settle the great American food debate.",
+      tags: ["reflex", "score", "memorial-day"],
+      category: "reflex",
+      image: "/hot-dog-or-not/og.png",
+      date: "2026-05-24",
+      duration: "2 min",
+      featured: true
+    },
+    {
       slug: "pride-flag-quiz",
       title: "Which Pride Flag Are You? 🏳️‍🌈",
       hook: "8 questions, 9 flags, one fabulous result.",
@@ -499,7 +510,7 @@
       image: "/pride-flag-quiz-tile.png",
       date: "2026-05-23",
       duration: "2 min",
-      featured: true
+      featured: false
     },
     {
       slug: "summer-aura",
