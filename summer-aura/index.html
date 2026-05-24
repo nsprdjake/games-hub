@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Summer Aura ✨ — What's your 2026 vibe?</title>
+<meta name="description" content="Answer 7 questions. Discover your Summer 2026 Aura. Share your vibe." />
+<meta name="theme-color" content="#ff6ad5" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Summer Aura ✨ — What's your 2026 vibe?" />
+<meta property="og:description" content="Answer 7 questions. Discover your Summer 2026 Aura. Share your vibe." />
+<meta property="og:url" content="https://games.nsprd.com/summer-aura" />
+<meta property="og:image" content="https://games.nsprd.com/summer-aura/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Summer Aura ✨" />
+<meta name="twitter:description" content="What's your Summer 2026 vibe?" />
+<meta name="twitter:image" content="https://games.nsprd.com/summer-aura/og.png" />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E✨%3C/text%3E%3C/svg%3E" />
+
+<style>
+  :root{
+    --bg-1:#1a0633;
+    --bg-2:#3b0764;
+    --pink:#ff6ad5;
+    --peach:#ffb86b;
+    --lime:#a8ff60;
+    --sky:#5ee0ff;
+    --gold:#ffd166;
+    --ink:#fff;
+    --shadow: 0 12px 40px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);}
+  body{
+    background:
+      radial-gradient(900px 500px at 10% 0%, rgba(255,106,213,.45), transparent 60%),
+      radial-gradient(900px 500px at 90% 100%, rgba(94,224,255,.35), transparent 60%),
+      linear-gradient(160deg,var(--bg-1),var(--bg-2));
+    min-height:100vh;
+    min-height:100dvh;
+    overflow-x:hidden;
+    padding: max(env(safe-area-inset-top),16px) 16px max(env(safe-area-inset-bottom),16px);
+    display:flex;flex-direction:column;align-items:center;
+  }
+
+  /* Floaty background sparkles */
+  .sparkles{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0;}
+  .sparkles span{position:absolute;font-size:18px;opacity:.5;animation:float 12s linear infinite;}
+  @keyframes float{
+    0%{transform:translateY(110vh) rotate(0);}
+    100%{transform:translateY(-20vh) rotate(360deg);}
+  }
+
+  .wrap{
+    position:relative;z-index:2;width:100%;max-width:560px;margin:auto;
+    display:flex;flex-direction:column;gap:20px;align-items:stretch;
+  }
+
+  header{text-align:center;padding-top:8px;}
+  .logo{
+    display:inline-block;font-weight:900;letter-spacing:.5px;
+    font-size:14px;text-transform:uppercase;color:var(--gold);
+    background:rgba(255,255,255,.08);padding:6px 12px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.15);
+  }
+  h1{
+    font-size: clamp(36px, 9vw, 56px);
+    line-height:.95;margin:14px 0 6px;
+    font-weight:900;letter-spacing:-1px;
+    background: linear-gradient(90deg,var(--pink),var(--peach),var(--gold),var(--sky));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow: 0 0 30px rgba(255,106,213,.35);
+  }
+  .tag{opacity:.85;font-size:15px;}
+
+  .card{
+    background: rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.12);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius:24px;
+    padding:22px;
+    box-shadow: var(--shadow);
+  }
+
+  .progress{
+    height:8px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden;margin-bottom:14px;
+  }
+  .progress > i{
+    display:block;height:100%;width:0%;
+    background:linear-gradient(90deg,var(--pink),var(--gold),var(--sky));
+    transition:width .35s ease;
+  }
+  .qcount{font-size:12px;text-transform:uppercase;letter-spacing:.12em;opacity:.7;margin-bottom:6px;}
+  .qtext{font-size: clamp(20px,5vw,26px);font-weight:800;line-height:1.2;margin:4px 0 16px;}
+
+  .answers{display:grid;gap:10px;}
+  .answer{
+    text-align:left;font-size:16px;font-weight:600;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.15);
+    color:#fff;padding:14px 16px;border-radius:14px;
+    cursor:pointer;transition: transform .12s ease, background .15s ease, border-color .15s ease;
+    display:flex;align-items:center;gap:12px;
+    font-family:inherit;
+  }
+  .answer:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);}
+  .answer:active{transform:scale(.98);}
+  .answer .emoji{font-size:22px;}
+
+  .start-cta{
+    appearance:none;border:0;cursor:pointer;font-family:inherit;
+    font-size:18px;font-weight:800;color:#1a0633;
+    background:linear-gradient(90deg,var(--pink),var(--peach),var(--gold));
+    padding:16px 22px;border-radius:999px;width:100%;
+    box-shadow: 0 10px 30px rgba(255,106,213,.45);
+    transition:transform .12s ease;
+  }
+  .start-cta:active{transform:scale(.98);}
+
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);}
+
+  /* Result */
+  .result{
+    text-align:center;padding:28px 22px;border-radius:28px;
+    border:1px solid rgba(255,255,255,.2);
+    background:linear-gradient(160deg, rgba(255,106,213,.3), rgba(94,224,255,.25));
+    box-shadow: var(--shadow);
+    position:relative;overflow:hidden;
+  }
+  .result::before{
+    content:"";position:absolute;inset:-2px;border-radius:28px;
+    background: conic-gradient(from 0deg, var(--pink), var(--peach), var(--gold), var(--lime), var(--sky), var(--pink));
+    filter: blur(28px);opacity:.45;z-index:-1;
+    animation: spin 12s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .aura-emoji{font-size:72px;line-height:1;margin-bottom:6px;filter: drop-shadow(0 6px 12px rgba(0,0,0,.4));}
+  .aura-name{
+    font-size: clamp(30px, 8vw, 44px);font-weight:900;letter-spacing:-.5px;margin:6px 0;
+    background: linear-gradient(90deg,#fff,#ffe9c2);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .aura-sub{font-size:14px;text-transform:uppercase;letter-spacing:.18em;opacity:.85;}
+  .aura-desc{font-size:16px;line-height:1.5;margin:16px 0 0;}
+
+  .traits{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:14px;}
+  .trait{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);padding:5px 10px;border-radius:999px;font-size:12px;font-weight:700;}
+
+  .share-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;}
+  .share-row button, .share-row a{
+    appearance:none;border:0;cursor:pointer;text-decoration:none;text-align:center;
+    font-family:inherit;font-weight:800;font-size:15px;color:#fff;
+    background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);
+    padding:14px 12px;border-radius:14px;transition:transform .12s ease, background .15s ease;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .share-row button:hover, .share-row a:hover{background:rgba(255,255,255,.22);}
+  .share-row button:active, .share-row a:active{transform:scale(.97);}
+
+  .restart{
+    appearance:none;border:0;cursor:pointer;font-family:inherit;font-weight:700;color:#fff;
+    background:transparent;text-decoration:underline;opacity:.8;margin-top:14px;font-size:14px;
+  }
+
+  footer{margin: 12px 0 6px;text-align:center;font-size:12px;opacity:.6;}
+  footer a{color:inherit;}
+
+  .toast{
+    position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);
+    background:#fff;color:#1a0633;font-weight:800;padding:10px 16px;border-radius:999px;
+    box-shadow:0 8px 24px rgba(0,0,0,.3);opacity:0;transition:all .25s ease;z-index:100;
+    font-size:14px;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* Bigger results card on wide screens */
+  @media (min-width: 640px){
+    .aura-emoji{font-size:96px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="sparkles" id="sparkles"></div>
+
+<div class="wrap">
+  <header>
+    <span class="logo">☀️ Summer 2026</span>
+    <h1>Summer Aura</h1>
+    <p class="tag">7 questions. One vibe. Infinite drama.</p>
+  </header>
+
+  <main id="app"></main>
+
+  <footer>
+    Made with ✨ for <a href="https://games.nsprd.com">games.nsprd.com</a>
+  </footer>
+</div>
+
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+/* ============================================================
+   SUMMER AURA — personality quiz
+   ============================================================ */
+
+const AURAS = {
+  poolWitch: {
+    key:"poolWitch",
+    name:"Pool Witch",
+    emoji:"🧜‍♀️",
+    sub:"Hex + Hydrate",
+    desc:"You manifest from a chaise lounge. You don't go in the water — the water comes to you. SPF 50, iced espresso, unread texts. Your aura sparkles like chlorine in moonlight.",
+    traits:["mysterious","hydrated","unbothered","glittery"],
+    color:"#5ee0ff"
+  },
+  goldenHourGoblin:{
+    key:"goldenHourGoblin",
+    name:"Golden Hour Goblin",
+    emoji:"🌅",
+    sub:"Chaos at 7pm sharp",
+    desc:"You only exist for those 47 minutes when the light is good. You're snack-stealing, photo-dumping, mildly feral, and emotionally unavailable until sunset. Everyone wants to be near you.",
+    traits:["chaotic","photogenic","snacky","main-character"],
+    color:"#ffb86b"
+  },
+  popsiclePrince:{
+    key:"popsiclePrince",
+    name:"Popsicle Prince",
+    emoji:"🍦",
+    sub:"Sweet. Cold. Melts fast.",
+    desc:"You're a heartthrob with a 12-minute shelf life. You promise everything and deliver in pastel. People follow you for the lore. You bring vibes, not plans.",
+    traits:["sweet","fleeting","aesthetic","over-promiser"],
+    color:"#ff6ad5"
+  },
+  beachBraat:{
+    key:"beachBraat",
+    name:"Beach Brat",
+    emoji:"🩴",
+    sub:"It's not that deep",
+    desc:"Sandy, slightly sunburnt, full of opinions. You will absolutely fight for the last spot under the umbrella. Group chat captain. You ARE the playlist. Don't @ you.",
+    traits:["loud","loyal","spicy","unmoisturized"],
+    color:"#ff6ad5"
+  },
+  feralBackyardKing:{
+    key:"feralBackyardKing",
+    name:"Feral Backyard King",
+    emoji:"🔥",
+    sub:"Grill. Beer. Bluetooth speaker.",
+    desc:"You haven't worn shoes since April. Your domain is a 12x12 patch of grass. You believe in three things: charcoal, citronella, and the long weekend. Bow to the tongs.",
+    traits:["barefoot","carnivorous","unsupervised","oddly capable"],
+    color:"#a8ff60"
+  },
+  iceLatteOracle:{
+    key:"iceLatteOracle",
+    name:"Iced Latte Oracle",
+    emoji:"🔮",
+    sub:"Caffeinated clairvoyance",
+    desc:"You see things others don't because you've been awake since 5:42am. You give unsolicited advice and it's always right. Your aura is oat milk swirling in cold brew.",
+    traits:["wired","wise","early","slightly smug"],
+    color:"#ffd166"
+  },
+  tropicalRomantic:{
+    key:"tropicalRomantic",
+    name:"Tropical Romantic",
+    emoji:"🌺",
+    sub:"Falling in love with strangers",
+    desc:"You wear linen. You write poems in your notes app on the lanai. Every summer you have one tragic crush you'll bring up at therapy in October. We love this for you.",
+    traits:["dreamy","linen-clad","yearning","sun-kissed"],
+    color:"#ff6ad5"
+  },
+  discoLifeguard:{
+    key:"discoLifeguard",
+    name:"Disco Lifeguard",
+    emoji:"🕺",
+    sub:"Saving lives. Slaying floors.",
+    desc:"You moonwalk on the pool deck. You CPR with rhythm. You'll save the party AND the drowning kid. Your aura is a glitter ball reflecting off SPF.",
+    traits:["heroic","groovy","tireless","drama-friendly"],
+    color:"#a8ff60"
+  }
+};
+
+/* Each question: 4 choices, each choice scores points to 1-2 auras. */
+const QUESTIONS = [
+  {
+    q: "Pick your summer drink:",
+    a: [
+      { t:"Iced oat latte (extra shot)", e:"☕️", s:{iceLatteOracle:3, goldenHourGoblin:1} },
+      { t:"Frozen margarita w/ extra salt", e:"🍹", s:{beachBraat:3, discoLifeguard:1} },
+      { t:"Coconut water from an actual coconut", e:"🥥", s:{tropicalRomantic:3, poolWitch:1} },
+      { t:"Whatever's coldest in the cooler", e:"🍺", s:{feralBackyardKing:3, popsiclePrince:1} },
+    ]
+  },
+  {
+    q: "It's 95°F. You're…",
+    a: [
+      { t:"Floating in a pool. Eyes closed. Phone face-down.", e:"🩷", s:{poolWitch:3, popsiclePrince:1} },
+      { t:"In the AC reorganizing my apps", e:"❄️", s:{iceLatteOracle:2, popsiclePrince:2} },
+      { t:"Outside grilling something questionable", e:"🥩", s:{feralBackyardKing:3} },
+      { t:"Walking 4 miles to the beach 'for vibes'", e:"🌊", s:{beachBraat:2, tropicalRomantic:2} },
+    ]
+  },
+  {
+    q: "Your summer footwear:",
+    a: [
+      { t:"Slides. Always slides.", e:"🩴", s:{beachBraat:3, feralBackyardKing:1} },
+      { t:"Barefoot. I'm one with the earth.", e:"🦶", s:{feralBackyardKing:3, tropicalRomantic:1} },
+      { t:"Cute strappy sandals. Stage-ready.", e:"👡", s:{discoLifeguard:2, popsiclePrince:2} },
+      { t:"Wedge espadrilles & a complicated linen tie", e:"👠", s:{tropicalRomantic:3, goldenHourGoblin:1} },
+    ]
+  },
+  {
+    q: "Your camera roll is 90%…",
+    a: [
+      { t:"Sunsets and silhouettes", e:"📸", s:{goldenHourGoblin:3, tropicalRomantic:1} },
+      { t:"Selfies in flattering pool lighting", e:"🤳", s:{poolWitch:2, popsiclePrince:2} },
+      { t:"My dog. Just my dog.", e:"🐕", s:{feralBackyardKing:2, iceLatteOracle:2} },
+      { t:"Screenshots of group chat receipts", e:"💬", s:{beachBraat:3, iceLatteOracle:1} },
+    ]
+  },
+  {
+    q: "Pick a summer song mood:",
+    a: [
+      { t:"Disco resurrection — bring back the strings", e:"🪩", s:{discoLifeguard:3, popsiclePrince:1} },
+      { t:"Hyperpop & weird girl synths", e:"🎧", s:{goldenHourGoblin:2, poolWitch:2} },
+      { t:"Bossa nova on a hammock", e:"🎵", s:{tropicalRomantic:3, iceLatteOracle:1} },
+      { t:"Country playlist for the cooler", e:"🎸", s:{feralBackyardKing:3, beachBraat:1} },
+    ]
+  },
+  {
+    q: "Your beach bag essential:",
+    a: [
+      { t:"SPF 75, hat, parasol, full PPE", e:"☂️", s:{poolWitch:3, iceLatteOracle:1} },
+      { t:"A book I won't finish", e:"📖", s:{tropicalRomantic:2, iceLatteOracle:2} },
+      { t:"Wireless speaker (group chat approved)", e:"🔊", s:{beachBraat:3, discoLifeguard:1} },
+      { t:"Snacks. SO many snacks.", e:"🍿", s:{goldenHourGoblin:3, feralBackyardKing:1} },
+    ]
+  },
+  {
+    q: "Pick your summer red flag:",
+    a: [
+      { t:"I disappear for 11 days. Then come back tan.", e:"👻", s:{poolWitch:3, goldenHourGoblin:1} },
+      { t:"I make plans, melt down, cancel an hour before", e:"🫠", s:{popsiclePrince:3, tropicalRomantic:1} },
+      { t:"I take charge of every BBQ I'm not invited to", e:"🔥", s:{feralBackyardKing:3, beachBraat:1} },
+      { t:"I have 14 unread texts but I'll send a sunset pic", e:"🌇", s:{goldenHourGoblin:2, iceLatteOracle:2} },
+    ]
+  }
+];
+
+/* ============================================================
+   STATE / RENDER
+   ============================================================ */
+
+const $app = document.getElementById('app');
+const $toast = document.getElementById('toast');
+
+let state = {
+  idx: 0,
+  scores: {},
+  picked: null, // aura key
+};
+
+function init(){
+  state = { idx: 0, scores: {}, picked: null };
+  for (const k of Object.keys(AURAS)) state.scores[k] = 0;
+  // Strip ?aura= from URL for fresh start
+  if (location.search.includes('aura=')){
+    history.replaceState({}, '', location.pathname);
+  }
+  spawnSparkles();
+  // If URL has ?aura=xxx, jump to result
+  const params = new URLSearchParams(location.search);
+  const aura = params.get('aura');
+  if (aura && AURAS[aura]){
+    state.picked = aura;
+    renderResult();
+  } else {
+    renderIntro();
+  }
+}
+
+function spawnSparkles(){
+  const root = document.getElementById('sparkles');
+  if (!root) return;
+  root.innerHTML = '';
+  const glyphs = ['✨','🌟','💫','⭐️','🩷','🧡','💛','💚','💙','💜'];
+  const n = 22;
+  for (let i=0;i<n;i++){
+    const s = document.createElement('span');
+    s.textContent = glyphs[Math.floor(Math.random()*glyphs.length)];
+    s.style.left = Math.random()*100 + 'vw';
+    s.style.animationDuration = (8 + Math.random()*10) + 's';
+    s.style.animationDelay = (-Math.random()*15) + 's';
+    s.style.fontSize = (12 + Math.random()*22) + 'px';
+    s.style.opacity = (.35 + Math.random()*.45).toFixed(2);
+    root.appendChild(s);
+  }
+}
+
+function renderIntro(){
+  $app.innerHTML = `
+    <div class="card">
+      <p class="qcount">No signup. No ads. Just vibes.</p>
+      <p class="qtext">Answer 7 questions and we'll diagnose your <em>Summer 2026 Aura</em>. Then share it to flex on the group chat.</p>
+      <button class="start-cta" id="start">Start the Quiz →</button>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:14px;justify-content:center;">
+        <span class="pill">⏱️ ~60 seconds</span>
+        <span class="pill">📱 Mobile-first</span>
+        <span class="pill">✨ 8 possible auras</span>
+      </div>
+    </div>
+  `;
+  document.getElementById('start').addEventListener('click', () => {
+    state.idx = 0;
+    renderQuestion();
+  });
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[state.idx];
+  const pct = Math.round((state.idx / QUESTIONS.length) * 100);
+  $app.innerHTML = `
+    <div class="card" role="group" aria-label="Question ${state.idx+1}">
+      <div class="progress" aria-hidden="true"><i style="width:${pct}%"></i></div>
+      <p class="qcount">Question ${state.idx+1} of ${QUESTIONS.length}</p>
+      <h2 class="qtext">${q.q}</h2>
+      <div class="answers">
+        ${q.a.map((ans,i) => `
+          <button class="answer" data-i="${i}">
+            <span class="emoji" aria-hidden="true">${ans.e}</span>
+            <span>${ans.t}</span>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  $app.querySelectorAll('.answer').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const i = Number(btn.dataset.i);
+      const choice = q.a[i];
+      for (const [k,v] of Object.entries(choice.s || {})){
+        state.scores[k] = (state.scores[k]||0) + v;
+      }
+      state.idx++;
+      if (state.idx >= QUESTIONS.length){
+        computeAndShowResult();
+      } else {
+        // small pop animation
+        btn.style.transform = 'scale(.97)';
+        setTimeout(renderQuestion, 140);
+      }
+    });
+  });
+}
+
+function computeAndShowResult(){
+  // pick highest score; break ties by stable preference order
+  let best = null, bestVal = -1;
+  const order = Object.keys(AURAS);
+  for (const k of order){
+    if ((state.scores[k]||0) > bestVal){
+      bestVal = state.scores[k];
+      best = k;
+    }
+  }
+  state.picked = best;
+  // Update URL so result is shareable
+  const u = new URL(location.href);
+  u.searchParams.set('aura', best);
+  history.replaceState({}, '', u.toString());
+  renderResult();
+}
+
+function renderResult(){
+  const a = AURAS[state.picked];
+  const shareText = `I'm a ${a.name} ${a.emoji} — ${a.sub}.\nWhat's your Summer 2026 Aura?`;
+  const shareUrl = location.href.split('#')[0];
+  const twText = encodeURIComponent(`${shareText}\n\n${shareUrl}`);
+
+  $app.innerHTML = `
+    <div class="result">
+      <div class="aura-emoji">${a.emoji}</div>
+      <div class="aura-sub">Your Summer 2026 Aura</div>
+      <div class="aura-name">${a.name}</div>
+      <p class="aura-desc">${a.desc}</p>
+      <div class="traits">
+        ${a.traits.map(t => `<span class="trait">#${t}</span>`).join('')}
+      </div>
+
+      <div class="share-row">
+        <a href="https://twitter.com/intent/tweet?text=${twText}" target="_blank" rel="noopener">𝕏 Share</a>
+        <button id="nativeShare">📲 Share</button>
+        <button id="copyResult">📋 Copy text</button>
+        <button id="copyLink">🔗 Copy link</button>
+      </div>
+
+      <button class="restart" id="restart">Take it again →</button>
+    </div>
+  `;
+
+  document.getElementById('restart').addEventListener('click', () => {
+    history.replaceState({}, '', location.pathname);
+    init();
+  });
+
+  document.getElementById('copyResult').addEventListener('click', async () => {
+    try{
+      await navigator.clipboard.writeText(`${shareText}\n\n${shareUrl}`);
+      toast('Copied result ✨');
+    } catch { toast('Copy failed'); }
+  });
+  document.getElementById('copyLink').addEventListener('click', async () => {
+    try{
+      await navigator.clipboard.writeText(shareUrl);
+      toast('Link copied 🔗');
+    } catch { toast('Copy failed'); }
+  });
+
+  const nativeBtn = document.getElementById('nativeShare');
+  if (navigator.share){
+    nativeBtn.addEventListener('click', async () => {
+      try{
+        await navigator.share({
+          title: `I'm a ${a.name} ${a.emoji}`,
+          text: shareText,
+          url: shareUrl,
+        });
+      } catch {}
+    });
+  } else {
+    nativeBtn.style.display = 'none';
+  }
+
+  // Apply aura-tinted glow
+  document.documentElement.style.setProperty('--accent', a.color);
+
+  // small confetti burst
+  burstSparkles();
+}
+
+function toast(msg){
+  $toast.textContent = msg;
+  $toast.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => $toast.classList.remove('show'), 1700);
+}
+
+function burstSparkles(){
+  const root = document.getElementById('sparkles');
+  if (!root) return;
+  const glyphs = ['✨','🌟','💫','🩷','🧡','💛','💚','💙','💜'];
+  for (let i=0;i<14;i++){
+    const s = document.createElement('span');
+    s.textContent = glyphs[Math.floor(Math.random()*glyphs.length)];
+    s.style.left = (40 + Math.random()*20) + 'vw';
+    s.style.top = (45 + Math.random()*10) + 'vh';
+    s.style.fontSize = (18 + Math.random()*24) + 'px';
+    s.style.animation = 'none';
+    s.style.transition = 'transform 1.4s ease-out, opacity 1.4s ease-out';
+    root.appendChild(s);
+    const dx = (Math.random()*2-1)*220;
+    const dy = (Math.random()*2-1)*220;
+    requestAnimationFrame(() => {
+      s.style.transform = `translate(${dx}px, ${dy}px) rotate(${Math.random()*720}deg)`;
+      s.style.opacity = '0';
+    });
+    setTimeout(() => s.remove(), 1500);
+  }
+}
+
+init();
+</script>
+</body>
+</html>
