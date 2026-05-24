@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Requests | nsprd games</title>
+  <meta property="og:title" content="Game Requests | nsprd games">
+  <meta property="og:description" content="Suggest games you want to see. Upvote community ideas. The best suggestions get built.">
+  <meta property="og:image" content="https://games.nsprd.com/og.png">
+  <meta property="og:url" content="https://games.nsprd.com/suggestions/">
+  <link rel="canonical" href="https://games.nsprd.com/suggestions/">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .subtitle {
+      color: rgba(255,255,255,0.9);
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+    }
+
+    .submit-form {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    }
+
+    .submit-form h2 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #555;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .char-count {
+      text-align: right;
+      font-size: 0.85rem;
+      color: #999;
+      margin-top: 3px;
+    }
+
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 14px 30px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .tab.active {
+      background: white;
+      color: #667eea;
+    }
+
+    .suggestions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .suggestion {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+    }
+
+    .vote-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .vote-btn {
+      background: none;
+      border: 2px solid #e0e0e0;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      padding: 0;
+    }
+
+    .vote-btn:hover {
+      border-color: #667eea;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .vote-btn.voted {
+      background: #667eea;
+      border-color: #667eea;
+      color: white;
+    }
+
+    .score {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    .suggestion-content {
+      flex: 1;
+    }
+
+    .suggestion-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .suggestion-body {
+      color: #666;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .suggestion-meta {
+      display: flex;
+      gap: 15px;
+      font-size: 0.85rem;
+      color: #999;
+      align-items: center;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .status-new {
+      background: #e3f2fd;
+      color: #1976d2;
+    }
+
+    .status-picked {
+      background: #fff3e0;
+      color: #f57c00;
+    }
+
+    .status-shipped {
+      background: #e8f5e9;
+      color: #388e3c;
+    }
+
+    .status-rejected {
+      background: #ffebee;
+      color: #d32f2f;
+    }
+
+    .empty-state {
+      background: white;
+      border-radius: 12px;
+      padding: 60px 20px;
+      text-align: center;
+      color: #999;
+    }
+
+    .empty-state h3 {
+      margin-bottom: 10px;
+      color: #666;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .suggestion {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .vote-column {
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>💡 Game Requests</h1>
+    <p class="subtitle">Suggest games you want to see. Upvote community ideas. The best suggestions get built.</p>
+
+    <div class="submit-form">
+      <h2>Submit an Idea</h2>
+      <form id="suggestion-form">
+        <div class="form-group">
+          <label for="title">Game Idea <span style="color: #d32f2f;">*</span></label>
+          <input type="text" id="title" name="title" placeholder="e.g., Pride Flag Quiz" required maxlength="80">
+          <div class="char-count"><span id="title-count">0</span>/80</div>
+        </div>
+
+        <div class="form-group">
+          <label for="body">Description (optional)</label>
+          <textarea id="body" name="body" placeholder="Any details about how it should work..." maxlength="500"></textarea>
+          <div class="char-count"><span id="body-count">0</span>/500</div>
+        </div>
+
+        <div class="form-group">
+          <label for="handle">Your handle (optional)</label>
+          <input type="text" id="handle" name="handle" placeholder="anonymous" maxlength="20">
+        </div>
+
+        <button type="submit" id="submit-btn">Submit Suggestion</button>
+      </form>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-filter="new">New</button>
+      <button class="tab" data-filter="top">Top Rated</button>
+      <button class="tab" data-filter="picked">Picked</button>
+      <button class="tab" data-filter="shipped">Shipped</button>
+    </div>
+
+    <div class="suggestions-list" id="suggestions-list">
+      <div class="empty-state">
+        <h3>Loading suggestions...</h3>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'https://api.games.nsprd.com';
+
+    // Visitor ID
+    function getVisitorId() {
+      let id = localStorage.getItem('games_visitor_id');
+      if (!id) {
+        id = 'v_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+        localStorage.setItem('games_visitor_id', id);
+      }
+      return id;
+    }
+
+    const visitorId = getVisitorId();
+
+    // Character counters
+    document.getElementById('title').addEventListener('input', e => {
+      document.getElementById('title-count').textContent = e.target.value.length;
+    });
+
+    document.getElementById('body').addEventListener('input', e => {
+      document.getElementById('body-count').textContent = e.target.value.length;
+    });
+
+    // Submit form
+    document.getElementById('suggestion-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      const formData = {
+        title: document.getElementById('title').value,
+        body: document.getElementById('body').value || null,
+        submitter_id: visitorId,
+        submitter_handle: document.getElementById('handle').value || null
+      };
+
+      try {
+        const res = await fetch(`${API_BASE}/api/suggest`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+
+        if (!res.ok) {
+          const error = await res.json();
+          throw new Error(error.error || 'Submission failed');
+        }
+
+        alert('✅ Suggestion submitted!');
+        e.target.reset();
+        document.getElementById('title-count').textContent = '0';
+        document.getElementById('body-count').textContent = '0';
+        loadSuggestions();
+      } catch (error) {
+        alert('❌ ' + error.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Submit Suggestion';
+      }
+    });
+
+    // Load suggestions
+    let currentFilter = 'new';
+    let currentSort = 'new';
+
+    async function loadSuggestions() {
+      const list = document.getElementById('suggestions-list');
+      list.innerHTML = '<div class="empty-state"><h3>Loading...</h3></div>';
+
+      try {
+        const res = await fetch(`${API_BASE}/api/suggestions?status=${currentFilter === 'top' ? 'new' : currentFilter}&sort=${currentFilter === 'top' ? 'top' : 'new'}&limit=50`);
+        const suggestions = await res.json();
+
+        if (!suggestions || suggestions.length === 0) {
+          list.innerHTML = '<div class="empty-state"><h3>No suggestions yet</h3><p>Be the first to submit an idea!</p></div>';
+          return;
+        }
+
+        list.innerHTML = suggestions.map(s => renderSuggestion(s)).join('');
+      } catch (error) {
+        list.innerHTML = '<div class="empty-state"><h3>Error loading suggestions</h3></div>';
+      }
+    }
+
+    function renderSuggestion(s) {
+      const statusClass = `status-${s.status}`;
+      const statusLabel = s.status === 'new' ? 'NEW' :
+                         s.status === 'picked' ? `PICKED BY ${s.picked_by_persona?.toUpperCase() || 'BOT'}` :
+                         s.status === 'shipped' ? 'SHIPPED' :
+                         'REJECTED';
+
+      return `
+        <div class="suggestion" data-id="${s.id}">
+          <div class="vote-column">
+            <button class="vote-btn" data-vote="1">⬆️</button>
+            <div class="score">${s.score || 0}</div>
+            <button class="vote-btn" data-vote="-1">⬇️</button>
+          </div>
+          <div class="suggestion-content">
+            <div class="suggestion-title">${escapeHtml(s.title)}</div>
+            ${s.body ? `<div class="suggestion-body">${escapeHtml(s.body)}</div>` : ''}
+            <div class="suggestion-meta">
+              <span class="status-badge ${statusClass}">${statusLabel}</span>
+              <span>by ${s.submitter_handle || 'anonymous'}</span>
+              <span>${s.upvotes || 0} ⬆️ ${s.downvotes || 0} ⬇️</span>
+              ${s.shipped_slug ? `<a href="/${s.shipped_slug}/" style="color: #667eea; text-decoration: none; font-weight: 600;">→ Play</a>` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Vote handling
+    document.addEventListener('click', async (e) => {
+      if (e.target.classList.contains('vote-btn')) {
+        const vote = parseInt(e.target.dataset.vote);
+        const suggestionDiv = e.target.closest('.suggestion');
+        const suggestionId = suggestionDiv.dataset.id;
+
+        try {
+          const res = await fetch(`${API_BASE}/api/vote`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              suggestion_id: parseInt(suggestionId),
+              voter_id: visitorId,
+              vote
+            })
+          });
+
+          if (res.ok) {
+            loadSuggestions(); // Reload to show updated scores
+          }
+        } catch (error) {
+          console.error('Vote failed:', error);
+        }
+      }
+    });
+
+    // Tab filtering
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentFilter = tab.dataset.filter;
+        if (currentFilter === 'top') {
+          currentSort = 'top';
+        } else {
+          currentSort = 'new';
+        }
+        loadSuggestions();
+      });
+    });
+
+    // Initial load
+    loadSuggestions();
+  </script>
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In | nsprd games</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    p {
+      color: #666;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #555;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    button {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .success {
+      background: #e8f5e9;
+      color: #388e3c;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .error {
+      background: #ffebee;
+      color: #d32f2f;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .profile-setup {
+      display: none;
+    }
+
+    .emoji-picker {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .emoji-btn {
+      width: 50px;
+      height: 50px;
+      border: 2px solid #e0e0e0;
+      background: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      padding: 0;
+    }
+
+    .emoji-btn:hover,
+    .emoji-btn.selected {
+      border-color: #667eea;
+      background: #f3f4ff;
+      transform: none;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div id="sign-in-view">
+      <h1>Sign In</h1>
+      <p>Get a magic link sent to your email. No password needed!</p>
+
+      <div id="message"></div>
+
+      <form id="signin-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" required>
+        </div>
+
+        <button type="submit" id="submit-btn">Send Magic Link</button>
+      </form>
+    </div>
+
+    <div id="profile-setup" class="profile-setup">
+      <h1>Choose Your Handle</h1>
+      <p>Pick a handle and emoji to represent you across the platform.</p>
+
+      <form id="profile-form">
+        <div class="form-group">
+          <label>Avatar Emoji</label>
+          <div class="emoji-picker" id="emoji-picker">
+            <button type="button" class="emoji-btn" data-emoji="🎰">🎰</button>
+            <button type="button" class="emoji-btn" data-emoji="🔥">🔥</button>
+            <button type="button" class="emoji-btn" data-emoji="⚡">⚡</button>
+            <button type="button" class="emoji-btn" data-emoji="💎">💎</button>
+            <button type="button" class="emoji-btn" data-emoji="🚀">🚀</button>
+            <button type="button" class="emoji-btn" data-emoji="🎮">🎮</button>
+            <button type="button" class="emoji-btn selected" data-emoji="👤">👤</button>
+            <button type="button" class="emoji-btn" data-emoji="🌟">🌟</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="handle">Handle (3-20 characters, a-z 0-9 _)</label>
+          <input type="text" id="handle" name="handle" placeholder="coolplayer42" required pattern="[a-z0-9_]{3,20}">
+        </div>
+
+        <button type="submit" id="claim-btn">Claim Handle</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://kxqrsdicrayblwpczxsy.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4cXJzZGljcmF5Ymx3cGN6eHN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU2NTg5NjgsImV4cCI6MjA4MTIzNDk2OH0.A8RQRlAzFUVQhxDg7nAnNH-1UK6_0rGJfs0M_2XCZVQ';
+    const API_BASE = 'https://api.games.nsprd.com';
+
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let selectedEmoji = '👤';
+    const oldVisitorId = localStorage.getItem('games_visitor_id');
+
+    // Emoji picker
+    document.querySelectorAll('.emoji-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedEmoji = btn.dataset.emoji;
+      });
+    });
+
+    // Check if user is already signed in
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        // Check if they have a profile
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .single();
+
+        if (profile) {
+          // Already has profile, redirect to hub
+          window.location.href = '/';
+        } else {
+          // Show profile setup
+          document.getElementById('sign-in-view').style.display = 'none';
+          document.getElementById('profile-setup').style.display = 'block';
+        }
+      }
+    })();
+
+    // Sign in form
+    document.getElementById('signin-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      const messageDiv = document.getElementById('message');
+
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      messageDiv.innerHTML = '';
+
+      const email = document.getElementById('email').value;
+
+      try {
+        const { error } = await supabase.auth.signInWithOtp({
+          email,
+          options: {
+            emailRedirectTo: window.location.href
+          }
+        });
+
+        if (error) throw error;
+
+        messageDiv.innerHTML = '<div class="success">✅ Check your email for the magic link!</div>';
+      } catch (error) {
+        messageDiv.innerHTML = `<div class="error">❌ ${error.message}</div>`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Send Magic Link';
+      }
+    });
+
+    // Profile setup form
+    document.getElementById('profile-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('claim-btn');
+
+      btn.disabled = true;
+      btn.textContent = 'Claiming...';
+
+      const handle = document.getElementById('handle').value.toLowerCase();
+
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) throw new Error('Not signed in');
+
+        const res = await fetch(`${API_BASE}/api/profile/claim`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`
+          },
+          body: JSON.stringify({
+            handle,
+            emoji: selectedEmoji,
+            old_visitor_id: oldVisitorId
+          })
+        });
+
+        if (!res.ok) {
+          const error = await res.json();
+          throw new Error(error.error);
+        }
+
+        alert('✅ Profile claimed! Redirecting...');
+        window.location.href = '/';
+      } catch (error) {
+        alert('❌ ' + error.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Claim Handle';
+      }
+    });
+  </script>
+</body>
+</html>
