@@ -11,6 +11,9 @@
     }
   ],
   "rewrites": [
-    { "source": "/pride-flag-quiz", "destination": "/pride-flag-quiz/index.html" }
+    { "source": "/pride-flag-quiz", "destination": "/pride-flag-quiz/index.html" },
+    { "source": "/hot-dog-or-not", "destination": "/hot-dog-or-not/index.html" },
+    { "source": "/summer-aura", "destination": "/summer-aura/index.html" },
+    { "source": "/emoji-decoder", "destination": "/emoji-decoder/index.html" }
   ]
 }

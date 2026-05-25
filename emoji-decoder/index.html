@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+<title>Emoji Decoder — Crack the Code</title>
+<meta name="description" content="Decode emoji clues into movies, songs, and phrases. 10 rounds. Can you crack them all?" />
+<meta name="theme-color" content="#6d28d9" />
+
+<!-- Open Graph -->
+<meta property="og:title" content="Emoji Decoder — Crack the Code" />
+<meta property="og:description" content="Decode emoji clues into movies, songs, and phrases. 10 rounds. Can you beat 8/10?" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://games.nsprd.com/emoji-decoder" />
+<meta property="og:image" content="https://games.nsprd.com/emoji-decoder/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Emoji Decoder — Crack the Code" />
+<meta name="twitter:description" content="10 emoji puzzles. Can you crack them all?" />
+<meta name="twitter:image" content="https://games.nsprd.com/emoji-decoder/og.png" />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🧩%3C/text%3E%3C/svg%3E" />
+
+<style>
+:root {
+  --bg: #0f0a1a;
+  --bg2: #1a1033;
+  --purple: #8b5cf6;
+  --purple-deep: #6d28d9;
+  --pink: #ec4899;
+  --cyan: #22d3ee;
+  --green: #4ade80;
+  --red: #f87171;
+  --yellow: #facc15;
+  --ink: #f0e7ff;
+  --ink-dim: rgba(240,231,255,0.5);
+  --glass: rgba(139,92,246,0.12);
+  --glass-border: rgba(139,92,246,0.25);
+  --radius: 20px;
+  --radius-sm: 12px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;min-height:100dvh;background:var(--bg);color:var(--ink);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;overflow-x:hidden}
+
+body{
+  background:
+    radial-gradient(ellipse at 30% 0%,rgba(139,92,246,0.2),transparent 50%),
+    radial-gradient(ellipse at 70% 100%,rgba(236,72,153,0.15),transparent 50%),
+    var(--bg);
+}
+
+/* Canvas background */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.4}
+
+/* Layout */
+.game-wrap{position:relative;z-index:1;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:16px}
+
+/* Screens */
+.screen{display:none;flex-direction:column;align-items:center;text-align:center;width:100%;max-width:480px}
+.screen.active{display:flex}
+
+/* Start screen */
+.logo{font-size:clamp(48px,12vw,72px);line-height:1;margin-bottom:8px}
+h1{font-size:clamp(28px,6vw,40px);font-weight:800;margin:0 0 8px;background:linear-gradient(135deg,var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tagline{font-size:16px;color:var(--ink-dim);margin:0 0 32px;line-height:1.4}
+.how{font-size:14px;color:var(--ink-dim);margin:0 0 24px;line-height:1.6;max-width:340px}
+.how strong{color:var(--ink)}
+
+/* Buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:16px 40px;border:none;border-radius:60px;
+  font-size:18px;font-weight:700;cursor:pointer;
+  background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;
+  box-shadow:0 8px 30px rgba(139,92,246,0.4);
+  transition:transform 0.15s,box-shadow 0.15s;
+  -webkit-user-select:none;user-select:none;
+}
+.btn:active{transform:scale(0.96);box-shadow:0 4px 16px rgba(139,92,246,0.3)}
+.btn-sm{padding:12px 28px;font-size:15px}
+.btn-outline{background:transparent;border:2px solid var(--glass-border);color:var(--ink);box-shadow:none}
+.btn-outline:active{background:var(--glass)}
+
+/* HUD */
+.hud{
+  display:flex;justify-content:space-between;align-items:center;
+  width:100%;max-width:480px;padding:12px 16px;
+  background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid var(--glass-border);border-radius:var(--radius-sm);
+  font-size:14px;font-weight:600;
+}
+.hud-round{color:var(--ink-dim)}
+.hud-round span{color:var(--ink)}
+.hud-score{color:var(--yellow);font-variant-numeric:tabular-nums}
+.hud-timer{
+  display:flex;align-items:center;gap:6px;
+  font-variant-numeric:tabular-nums;
+}
+.timer-bar{width:60px;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden}
+.timer-fill{height:100%;background:var(--green);border-radius:3px;transition:width 0.1s linear,background 0.3s}
+.timer-fill.warn{background:var(--yellow)}
+.timer-fill.danger{background:var(--red)}
+
+/* Puzzle card */
+.puzzle-card{
+  width:100%;max-width:480px;
+  background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--glass-border);border-radius:var(--radius);
+  padding:32px 24px 24px;
+  display:flex;flex-direction:column;align-items:center;gap:20px;
+}
+.category-badge{
+  font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;
+  color:var(--cyan);
+  padding:4px 12px;border:1px solid rgba(34,211,238,0.3);border-radius:20px;
+}
+.emoji-display{
+  font-size:clamp(40px,10vw,64px);
+  line-height:1.3;
+  letter-spacing:4px;
+  padding:16px;
+  min-height:100px;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;
+  word-break:break-word;
+}
+.hint-text{font-size:13px;color:var(--ink-dim);margin:0;min-height:18px}
+
+/* Answer options */
+.options{
+  display:grid;grid-template-columns:1fr;gap:10px;
+  width:100%;max-width:480px;
+}
+.option-btn{
+  padding:16px 20px;border:2px solid var(--glass-border);border-radius:var(--radius-sm);
+  background:var(--glass);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  color:var(--ink);font-size:16px;font-weight:600;text-align:left;
+  cursor:pointer;transition:border-color 0.15s,background 0.15s,transform 0.1s;
+  -webkit-user-select:none;user-select:none;
+}
+.option-btn:active{transform:scale(0.98)}
+.option-btn:hover{border-color:var(--purple);background:rgba(139,92,246,0.15)}
+.option-btn.correct{border-color:var(--green);background:rgba(74,222,128,0.15);color:var(--green)}
+.option-btn.wrong{border-color:var(--red);background:rgba(248,113,113,0.1);color:var(--red)}
+.option-btn.reveal{border-color:var(--green);background:rgba(74,222,128,0.08);opacity:0.7}
+.option-btn.disabled{pointer-events:none;opacity:0.5}
+
+/* Feedback flash */
+.feedback{
+  font-size:20px;font-weight:700;min-height:32px;
+  display:flex;align-items:center;gap:8px;
+}
+.feedback.correct-fb{color:var(--green)}
+.feedback.wrong-fb{color:var(--red)}
+.feedback.timeout-fb{color:var(--yellow)}
+
+/* Results screen */
+.result-emoji{font-size:64px;margin-bottom:8px}
+.result-score{font-size:clamp(48px,10vw,72px);font-weight:800;margin:0;background:linear-gradient(135deg,var(--yellow),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.result-label{font-size:16px;color:var(--ink-dim);margin:4px 0 24px}
+.result-msg{font-size:18px;font-weight:600;margin:0 0 24px;line-height:1.4}
+
+/* Breakdown */
+.breakdown{
+  width:100%;max-width:480px;
+  display:flex;flex-direction:column;gap:8px;
+  margin-bottom:24px;
+}
+.bd-row{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 14px;border-radius:var(--radius-sm);
+  background:var(--glass);font-size:14px;
+}
+.bd-num{width:24px;text-align:center;font-weight:700;color:var(--ink-dim);flex-shrink:0}
+.bd-emoji{flex-shrink:0;font-size:18px}
+.bd-answer{flex:1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bd-result{flex-shrink:0;font-size:16px}
+.bd-time{flex-shrink:0;font-size:12px;color:var(--ink-dim);font-variant-numeric:tabular-nums;min-width:36px;text-align:right}
+
+/* Share buttons */
+.share-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+
+/* Footer */
+.footer{font-size:12px;color:var(--ink-dim);margin-top:16px}
+.footer a{color:var(--purple);text-decoration:none}
+
+/* Animations */
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pop{0%{transform:scale(0.8);opacity:0}50%{transform:scale(1.05)}100%{transform:scale(1);opacity:1}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.anim-slide{animation:slideUp 0.35s ease-out}
+.anim-pop{animation:pop 0.4s ease-out}
+.anim-shake{animation:shake 0.4s ease-out}
+
+/* Responsive */
+@media(min-width:500px){
+  .options{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="game-wrap">
+
+  <!-- START SCREEN -->
+  <div class="screen active" id="start-screen">
+    <div class="logo anim-pop">🧩</div>
+    <h1>Emoji Decoder</h1>
+    <p class="tagline">Crack the emoji code. Movies, songs, phrases.</p>
+    <p class="how">
+      Each round shows an <strong>emoji clue</strong>. Pick the right answer from four choices.
+      Faster answers = more points. <strong>10 rounds, 12 seconds each.</strong>
+    </p>
+    <button class="btn" id="start-btn">Decode</button>
+    <p class="footer">A game by <a href="https://games.nsprd.com">Jack</a> on NSPRD</p>
+  </div>
+
+  <!-- PLAY SCREEN -->
+  <div class="screen" id="play-screen">
+    <div class="hud">
+      <div class="hud-round">Round <span id="round-num">1</span>/10</div>
+      <div class="hud-timer">
+        <div class="timer-bar"><div class="timer-fill" id="timer-fill"></div></div>
+        <span id="timer-text">12s</span>
+      </div>
+      <div class="hud-score" id="hud-score">0 pts</div>
+    </div>
+
+    <div class="puzzle-card anim-slide" id="puzzle-card">
+      <div class="category-badge" id="category-badge">Movie</div>
+      <div class="emoji-display" id="emoji-display"></div>
+      <p class="hint-text" id="hint-text"></p>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+
+    <div class="options" id="options"></div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div class="screen" id="results-screen">
+    <div class="result-emoji anim-pop" id="result-emoji">🏆</div>
+    <p class="result-score anim-pop" id="result-score">0</p>
+    <p class="result-label">out of 1000</p>
+    <p class="result-msg" id="result-msg"></p>
+
+    <div class="breakdown" id="breakdown"></div>
+
+    <div class="share-row">
+      <button class="btn btn-sm" id="share-btn">Share Score</button>
+      <button class="btn btn-sm btn-outline" id="replay-btn">Play Again</button>
+    </div>
+    <p class="footer" style="margin-top:20px">
+      Play more at <a href="https://games.nsprd.com">games.nsprd.com</a>
+    </p>
+  </div>
+
+</div>
+
+<script>
+// ──────────────────────────────────────────
+// PUZZLE DATABASE — movies, songs, phrases, TV shows, books
+// ──────────────────────────────────────────
+const PUZZLES = [
+  // MOVIES
+  {cat:'Movie',emoji:'🦁👑',answer:'The Lion King',opts:['The Lion King','The Jungle Book','Madagascar','Zootopia']},
+  {cat:'Movie',emoji:'🧊🚢💔',answer:'Titanic',opts:['Titanic','The Poseidon Adventure','Cast Away','Waterworld']},
+  {cat:'Movie',emoji:'🕷️🧑',answer:'Spider-Man',opts:['Spider-Man','Ant-Man','The Fly','Venom']},
+  {cat:'Movie',emoji:'👻👻🔫',answer:'Ghostbusters',opts:['Ghostbusters','Casper','Poltergeist','Beetlejuice']},
+  {cat:'Movie',emoji:'🧙‍♂️💍🌋',answer:'Lord of the Rings',opts:['Lord of the Rings','The Hobbit','Harry Potter','Narnia']},
+  {cat:'Movie',emoji:'🦈🏊',answer:'Jaws',opts:['Jaws','The Meg','Finding Nemo','Sharknado']},
+  {cat:'Movie',emoji:'🤖👦❤️',answer:'A.I. Artificial Intelligence',opts:['A.I. Artificial Intelligence','Wall-E','Ex Machina','The Iron Giant']},
+  {cat:'Movie',emoji:'🔨⚡🦸',answer:'Thor',opts:['Thor','Shazam','The Flash','Captain America']},
+  {cat:'Movie',emoji:'🧪🦎🟢',answer:'The Amazing Spider-Man',opts:['The Amazing Spider-Man','Hulk','Godzilla','Jurassic Park']},
+  {cat:'Movie',emoji:'🚀🌕👨‍🚀',answer:'Apollo 13',opts:['Apollo 13','Interstellar','The Martian','Gravity']},
+  {cat:'Movie',emoji:'🐀👨‍🍳🇫🇷',answer:'Ratatouille',opts:['Ratatouille','The Chef','Julie & Julia','Burnt']},
+  {cat:'Movie',emoji:'🏎️⚡🔴',answer:'Cars',opts:['Cars','Speed Racer','Rush','Ford v Ferrari']},
+  {cat:'Movie',emoji:'👸❄️⛄',answer:'Frozen',opts:['Frozen','Tangled','Moana','Brave']},
+  {cat:'Movie',emoji:'🦇🌃🃏',answer:'The Dark Knight',opts:['The Dark Knight','Batman Begins','Joker','Gotham']},
+  {cat:'Movie',emoji:'👽📞🏠',answer:'E.T.',opts:['E.T.','Alien','Close Encounters','Arrival']},
+  {cat:'Movie',emoji:'🏴‍☠️⚓💀',answer:'Pirates of the Caribbean',opts:['Pirates of the Caribbean','Treasure Island','Moby Dick','Hook']},
+  {cat:'Movie',emoji:'🐶🐾🍝',answer:'Lady and the Tramp',opts:['Lady and the Tramp','101 Dalmatians','All Dogs Go to Heaven','Bolt']},
+  {cat:'Movie',emoji:'🧛💉🌙',answer:'Twilight',opts:['Twilight','Dracula','Interview with the Vampire','Blade']},
+  {cat:'Movie',emoji:'🤠🐎🏜️',answer:'The Good, The Bad and The Ugly',opts:['The Good, The Bad and The Ugly','Django Unchained','Tombstone','True Grit']},
+  {cat:'Movie',emoji:'🦖🏝️🧬',answer:'Jurassic Park',opts:['Jurassic Park','King Kong','Godzilla','The Lost World']},
+
+  // SONGS
+  {cat:'Song',emoji:'🎤💃🌙',answer:'Dancing in the Moonlight',opts:['Dancing in the Moonlight','Moonlight Sonata','Dancing Queen','Fly Me to the Moon']},
+  {cat:'Song',emoji:'🔥🎸🎶',answer:'Light My Fire',opts:['Light My Fire','Fire Starter','Ring of Fire','Burning Love']},
+  {cat:'Song',emoji:'☀️😊',answer:'Here Comes the Sun',opts:['Here Comes the Sun','Walking on Sunshine','Sunshine of Your Love','Good Day Sunshine']},
+  {cat:'Song',emoji:'🎵🌧️☔',answer:'Singin\' in the Rain',opts:['Singin\' in the Rain','Purple Rain','It\'s Raining Men','Raindrops Keep Fallin\'']},
+  {cat:'Song',emoji:'💎✋🌌',answer:'Diamonds in the Sky',opts:['Diamonds in the Sky','Shine On You Crazy Diamond','Diamonds Are Forever','Gold Digger']},
+  {cat:'Song',emoji:'🎹🔥🧑',answer:'Great Balls of Fire',opts:['Great Balls of Fire','Firework','Burning Down the House','Fire']},
+  {cat:'Song',emoji:'👴🎸🎶🕐',answer:'Rock Around the Clock',opts:['Rock Around the Clock','Time After Time','Reelin\' in the Years','Turn Back Time']},
+  {cat:'Song',emoji:'💜🌧️',answer:'Purple Rain',opts:['Purple Rain','Blue Suede Shoes','Paint It Black','Yellow Submarine']},
+  {cat:'Song',emoji:'🌈🌉',answer:'Somewhere Over the Rainbow',opts:['Somewhere Over the Rainbow','Bridge Over Troubled Water','Rainbows','Under the Bridge']},
+  {cat:'Song',emoji:'🚗💨🛣️',answer:'Life is a Highway',opts:['Life is a Highway','Highway to Hell','On the Road Again','Drive']},
+  {cat:'Song',emoji:'⭐🧑🎤',answer:'Starman',opts:['Starman','Space Oddity','Rocket Man','Star-Spangled Banner']},
+  {cat:'Song',emoji:'🫀💔😢',answer:'Heartbreak Hotel',opts:['Heartbreak Hotel','Broken Heart','Bleeding Love','Total Eclipse of the Heart']},
+
+  // PHRASES & SAYINGS
+  {cat:'Phrase',emoji:'🐘🏠',answer:'Elephant in the Room',opts:['Elephant in the Room','Room for Improvement','House of Cards','Big Picture']},
+  {cat:'Phrase',emoji:'🧊❄️🔨',answer:'Break the Ice',opts:['Break the Ice','Cold Shoulder','Tip of the Iceberg','Frozen Stiff']},
+  {cat:'Phrase',emoji:'🍎🌳',answer:'Apple Doesn\'t Fall Far from the Tree',opts:['Apple Doesn\'t Fall Far from the Tree','Forbidden Fruit','Bad Apple','Apple of My Eye']},
+  {cat:'Phrase',emoji:'⏰💣',answer:'Time Bomb',opts:['Time Bomb','Beat the Clock','Ticking Away','Running Out of Time']},
+  {cat:'Phrase',emoji:'🔑🎯',answer:'Key to Success',opts:['Key to Success','Bullseye','Lock and Key','The Missing Piece']},
+  {cat:'Phrase',emoji:'🐔🥚❓',answer:'Chicken or the Egg',opts:['Chicken or the Egg','Egg on Your Face','Hen Party','Birds of a Feather']},
+  {cat:'Phrase',emoji:'🌊🐟',answer:'Plenty of Fish in the Sea',opts:['Plenty of Fish in the Sea','Sink or Swim','Go with the Flow','Big Fish']},
+  {cat:'Phrase',emoji:'🦋🫁',answer:'Butterflies in Your Stomach',opts:['Butterflies in Your Stomach','Gut Feeling','Heart Flutter','Social Butterfly']},
+  {cat:'Phrase',emoji:'🪡🕐',answer:'A Stitch in Time',opts:['A Stitch in Time','Running Out of Time','Thread the Needle','Sew What']},
+  {cat:'Phrase',emoji:'🐱👜',answer:'Cat\'s Out of the Bag',opts:['Cat\'s Out of the Bag','Curiosity Killed the Cat','Cat Nap','Copy Cat']},
+
+  // TV SHOWS
+  {cat:'TV Show',emoji:'👑🎮⚔️',answer:'Game of Thrones',opts:['Game of Thrones','The Crown','Vikings','The Witcher']},
+  {cat:'TV Show',emoji:'🔬🧪💊',answer:'Breaking Bad',opts:['Breaking Bad','Better Call Saul','Dexter','Ozark']},
+  {cat:'TV Show',emoji:'🧟‍♂️🌍',answer:'The Walking Dead',opts:['The Walking Dead','Fear the Walking Dead','Z Nation','28 Days Later']},
+  {cat:'TV Show',emoji:'👩‍⚕️🏥💉',answer:'Grey\'s Anatomy',opts:['Grey\'s Anatomy','House','ER','Scrubs']},
+  {cat:'TV Show',emoji:'🍕☕👫👫👫',answer:'Friends',opts:['Friends','How I Met Your Mother','Seinfeld','The Big Bang Theory']},
+  {cat:'TV Show',emoji:'🏠🔮🙃',answer:'Stranger Things',opts:['Stranger Things','The X-Files','Supernatural','Dark']},
+  {cat:'TV Show',emoji:'🐉🔥👸',answer:'House of the Dragon',opts:['House of the Dragon','Game of Thrones','Reign','Merlin']},
+  {cat:'TV Show',emoji:'🏝️✈️💀',answer:'Lost',opts:['Lost','Survivor','Gilligan\'s Island','The Wilds']},
+
+  // BOOKS / STORIES
+  {cat:'Book',emoji:'🐋📖🚢',answer:'Moby Dick',opts:['Moby Dick','20,000 Leagues','The Old Man and the Sea','Life of Pi']},
+  {cat:'Book',emoji:'🧙‍♂️⚡👓',answer:'Harry Potter',opts:['Harry Potter','Lord of the Rings','Percy Jackson','The Worst Witch']},
+  {cat:'Book',emoji:'🕵️‍♂️🔍🎩',answer:'Sherlock Holmes',opts:['Sherlock Holmes','Hercule Poirot','James Bond','Nancy Drew']},
+  {cat:'Book',emoji:'🐇🕳️🎩',answer:'Alice in Wonderland',opts:['Alice in Wonderland','Peter Pan','The Wizard of Oz','Narnia']},
+];
+
+// ──────────────────────────────────────────
+// GAME STATE
+// ──────────────────────────────────────────
+const ROUNDS = 10;
+const TIME_LIMIT = 12; // seconds per round
+const MAX_POINTS = 100; // points per round (scaled by speed)
+
+let currentRound = 0;
+let score = 0;
+let roundData = []; // {puzzle, chosen, correct, time}
+let selectedPuzzles = [];
+let timerInterval = null;
+let timeLeft = 0;
+let roundStartTime = 0;
+let answered = false;
+
+// ──────────────────────────────────────────
+// DOM REFS
+// ──────────────────────────────────────────
+const $=id=>document.getElementById(id);
+const startScreen=$('start-screen');
+const playScreen=$('play-screen');
+const resultsScreen=$('results-screen');
+const startBtn=$('start-btn');
+const roundNum=$('round-num');
+const timerFill=$('timer-fill');
+const timerText=$('timer-text');
+const hudScore=$('hud-score');
+const categoryBadge=$('category-badge');
+const emojiDisplay=$('emoji-display');
+const hintText=$('hint-text');
+const feedback=$('feedback');
+const optionsDiv=$('options');
+const puzzleCard=$('puzzle-card');
+const resultEmoji=$('result-emoji');
+const resultScore=$('result-score');
+const resultMsg=$('result-msg');
+const breakdown=$('breakdown');
+const shareBtn=$('share-btn');
+const replayBtn=$('replay-btn');
+
+// ──────────────────────────────────────────
+// BACKGROUND CANVAS
+// ──────────────────────────────────────────
+(function initBg(){
+  const c=document.getElementById('bg-canvas');
+  const ctx=c.getContext('2d');
+  let W,H;
+  const dots=[];
+  const N=35;
+
+  function resize(){
+    W=c.width=window.innerWidth;
+    H=c.height=window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize',resize);
+
+  for(let i=0;i<N;i++){
+    dots.push({
+      x:Math.random()*W,
+      y:Math.random()*H,
+      vx:(Math.random()-0.5)*0.4,
+      vy:(Math.random()-0.5)*0.4,
+      r:Math.random()*2+1
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    for(let i=0;i<N;i++){
+      const d=dots[i];
+      d.x+=d.vx;d.y+=d.vy;
+      if(d.x<0||d.x>W)d.vx*=-1;
+      if(d.y<0||d.y>H)d.vy*=-1;
+
+      ctx.beginPath();
+      ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(139,92,246,0.5)';
+      ctx.fill();
+
+      for(let j=i+1;j<N;j++){
+        const e=dots[j];
+        const dx=d.x-e.x,dy=d.y-e.y;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<150){
+          ctx.beginPath();
+          ctx.moveTo(d.x,d.y);
+          ctx.lineTo(e.x,e.y);
+          ctx.strokeStyle=`rgba(139,92,246,${0.15*(1-dist/150)})`;
+          ctx.lineWidth=0.8;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ──────────────────────────────────────────
+// GAME LOGIC
+// ──────────────────────────────────────────
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+  return a;
+}
+
+function pickPuzzles(){
+  // Pick ROUNDS puzzles, trying to mix categories
+  const shuffled=shuffle(PUZZLES);
+  const picked=[];
+  const catCount={};
+  for(const p of shuffled){
+    if(picked.length>=ROUNDS)break;
+    const cc=catCount[p.cat]||0;
+    if(cc<3){
+      picked.push(p);
+      catCount[p.cat]=(cc||0)+1;
+    }
+  }
+  // Fill if needed
+  while(picked.length<ROUNDS){
+    const remaining=shuffled.filter(p=>!picked.includes(p));
+    if(remaining.length===0)break;
+    picked.push(remaining[0]);
+  }
+  return picked;
+}
+
+function showScreen(screen){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  screen.classList.add('active');
+}
+
+function startGame(){
+  currentRound=0;
+  score=0;
+  roundData=[];
+  selectedPuzzles=pickPuzzles();
+  hudScore.textContent='0 pts';
+  showScreen(playScreen);
+  // Mark this game as played for hub feedback
+  try{sessionStorage.setItem('nsprd_last_played','emoji-decoder');sessionStorage.setItem('nsprd_play_ts',Date.now())}catch(e){}
+  nextRound();
+}
+
+function nextRound(){
+  if(currentRound>=ROUNDS){
+    endGame();
+    return;
+  }
+  answered=false;
+  feedback.textContent='';
+  feedback.className='feedback';
+  const puzzle=selectedPuzzles[currentRound];
+  roundNum.textContent=currentRound+1;
+  categoryBadge.textContent=puzzle.cat;
+  emojiDisplay.textContent=puzzle.emoji;
+  hintText.textContent='';
+
+  // Shuffle options
+  const opts=shuffle(puzzle.opts);
+  optionsDiv.innerHTML='';
+  opts.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.className='option-btn';
+    btn.textContent=opt;
+    btn.addEventListener('click',()=>handleAnswer(opt,puzzle,btn));
+    optionsDiv.appendChild(btn);
+  });
+
+  // Animate card
+  puzzleCard.classList.remove('anim-slide');
+  void puzzleCard.offsetWidth;
+  puzzleCard.classList.add('anim-slide');
+
+  // Start timer
+  timeLeft=TIME_LIMIT;
+  roundStartTime=performance.now();
+  updateTimerDisplay();
+  clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
+    const elapsed=(performance.now()-roundStartTime)/1000;
+    timeLeft=Math.max(0,TIME_LIMIT-elapsed);
+    updateTimerDisplay();
+    if(timeLeft<=0){
+      clearInterval(timerInterval);
+      handleTimeout(puzzle);
+    }
+  },50);
+}
+
+function updateTimerDisplay(){
+  const pct=(timeLeft/TIME_LIMIT)*100;
+  timerFill.style.width=pct+'%';
+  timerText.textContent=Math.ceil(timeLeft)+'s';
+  timerFill.className='timer-fill';
+  if(pct<25)timerFill.classList.add('danger');
+  else if(pct<50)timerFill.classList.add('warn');
+}
+
+function handleAnswer(chosen,puzzle,btn){
+  if(answered)return;
+  answered=true;
+  clearInterval(timerInterval);
+
+  const elapsed=(performance.now()-roundStartTime)/1000;
+  const correct=chosen===puzzle.answer;
+
+  // Calculate points — faster = more points
+  let pts=0;
+  if(correct){
+    const speedBonus=Math.max(0,(TIME_LIMIT-elapsed)/TIME_LIMIT);
+    pts=Math.round(MAX_POINTS*0.5 + MAX_POINTS*0.5*speedBonus);
+    score+=pts;
+  }
+
+  // Show feedback
+  if(correct){
+    btn.classList.add('correct');
+    feedback.className='feedback correct-fb';
+    feedback.textContent=`+${pts} pts`;
+  } else {
+    btn.classList.add('wrong');
+    feedback.className='feedback wrong-fb anim-shake';
+    feedback.textContent='Nope!';
+    // Reveal correct answer
+    optionsDiv.querySelectorAll('.option-btn').forEach(b=>{
+      if(b.textContent===puzzle.answer)b.classList.add('reveal');
+      else if(!b.classList.contains('wrong'))b.classList.add('disabled');
+    });
+  }
+
+  // Disable all options
+  optionsDiv.querySelectorAll('.option-btn').forEach(b=>{
+    if(!b.classList.contains('correct')&&!b.classList.contains('wrong')&&!b.classList.contains('reveal'))
+      b.classList.add('disabled');
+  });
+
+  hudScore.textContent=score+' pts';
+
+  roundData.push({puzzle,chosen,correct,time:elapsed.toFixed(1),pts});
+  currentRound++;
+
+  setTimeout(nextRound,correct?1200:2000);
+}
+
+function handleTimeout(puzzle){
+  if(answered)return;
+  answered=true;
+
+  feedback.className='feedback timeout-fb';
+  feedback.textContent='Time\'s up!';
+
+  optionsDiv.querySelectorAll('.option-btn').forEach(b=>{
+    if(b.textContent===puzzle.answer)b.classList.add('reveal');
+    else b.classList.add('disabled');
+  });
+
+  roundData.push({puzzle,chosen:null,correct:false,time:TIME_LIMIT.toFixed(1),pts:0});
+  currentRound++;
+
+  setTimeout(nextRound,2000);
+}
+
+function endGame(){
+  clearInterval(timerInterval);
+  showScreen(resultsScreen);
+
+  const correctCount=roundData.filter(r=>r.correct).length;
+  resultScore.textContent=score;
+
+  // Result emoji and message
+  const pct=correctCount/ROUNDS;
+  if(pct>=0.9){
+    resultEmoji.textContent='🧠';
+    resultMsg.textContent='Emoji Savant. You speak fluent emoji.';
+  } else if(pct>=0.7){
+    resultEmoji.textContent='🔥';
+    resultMsg.textContent='Solid decoding. You\'ve got the gift.';
+  } else if(pct>=0.5){
+    resultEmoji.textContent='🤔';
+    resultMsg.textContent='Not bad. A few more rounds and you\'ll crack it.';
+  } else if(pct>=0.3){
+    resultEmoji.textContent='😅';
+    resultMsg.textContent='Rough day at the emoji office. Try again?';
+  } else {
+    resultEmoji.textContent='💀';
+    resultMsg.textContent='The emojis defeated you. Rematch?';
+  }
+
+  // Build breakdown
+  breakdown.innerHTML='';
+  roundData.forEach((r,i)=>{
+    const row=document.createElement('div');
+    row.className='bd-row';
+    row.innerHTML=`
+      <span class="bd-num">${i+1}</span>
+      <span class="bd-emoji">${r.puzzle.emoji.slice(0,4)}</span>
+      <span class="bd-answer">${r.puzzle.answer}</span>
+      <span class="bd-time">${r.time}s</span>
+      <span class="bd-result">${r.correct?'✅':'❌'}</span>
+    `;
+    breakdown.appendChild(row);
+  });
+}
+
+// ──────────────────────────────────────────
+// SHARE
+// ──────────────────────────────────────────
+function getShareText(){
+  const correctCount=roundData.filter(r=>r.correct).length;
+  const grid=roundData.map(r=>r.correct?'🟩':'🟥').join('');
+  return `🧩 Emoji Decoder\n${score} pts (${correctCount}/${ROUNDS})\n${grid}\n\nPlay at games.nsprd.com/emoji-decoder`;
+}
+
+shareBtn.addEventListener('click',async()=>{
+  const text=getShareText();
+  if(navigator.share){
+    try{await navigator.share({text});return}catch(e){}
+  }
+  try{
+    await navigator.clipboard.writeText(text);
+    shareBtn.textContent='Copied!';
+    setTimeout(()=>shareBtn.textContent='Share Score',2000);
+  }catch(e){
+    // Fallback: select a temp textarea
+    const ta=document.createElement('textarea');
+    ta.value=text;document.body.appendChild(ta);
+    ta.select();document.execCommand('copy');
+    document.body.removeChild(ta);
+    shareBtn.textContent='Copied!';
+    setTimeout(()=>shareBtn.textContent='Share Score',2000);
+  }
+});
+
+// ──────────────────────────────────────────
+// EVENT LISTENERS
+// ──────────────────────────────────────────
+startBtn.addEventListener('click',startGame);
+replayBtn.addEventListener('click',startGame);
+
+// Keyboard shortcuts (desktop)
+document.addEventListener('keydown',e=>{
+  if(playScreen.classList.contains('active')&&!answered){
+    const idx='1234'.indexOf(e.key);
+    if(idx>=0){
+      const btns=optionsDiv.querySelectorAll('.option-btn');
+      if(btns[idx])btns[idx].click();
+    }
+  }
+  if(e.key==='Enter'){
+    if(startScreen.classList.contains('active'))startBtn.click();
+    if(resultsScreen.classList.contains('active'))replayBtn.click();
+  }
+});
+</script>
+</body>
+</html>

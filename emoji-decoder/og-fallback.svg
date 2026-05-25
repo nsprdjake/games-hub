@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f0a1a"/>
+      <stop offset="100%" stop-color="#1a1033"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="20" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- Glow circles -->
+  <circle cx="300" cy="200" r="200" fill="#8b5cf6" opacity="0.15"/>
+  <circle cx="900" cy="400" r="250" fill="#ec4899" opacity="0.1"/>
+  <!-- Emoji -->
+  <text x="600" y="240" text-anchor="middle" font-size="120" fill="white">&#x1F9E9;</text>
+  <!-- Title -->
+  <text x="600" y="370" text-anchor="middle" font-family="system-ui,sans-serif" font-size="72" font-weight="800" fill="url(#accent)">EMOJI DECODER</text>
+  <!-- Subtitle -->
+  <text x="600" y="430" text-anchor="middle" font-family="system-ui,sans-serif" font-size="28" fill="#a78bfa">Crack the Code</text>
+  <!-- Subtext -->
+  <text x="600" y="520" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" fill="rgba(255,255,255,0.5)">10 rounds  &#x2022;  Movies, songs, phrases  &#x2022;  games.nsprd.com</text>
+  <!-- Corner emojis -->
+  <text x="100" y="100" font-size="40" opacity="0.4">&#x1F3AC;</text>
+  <text x="1060" y="100" font-size="40" opacity="0.4">&#x1F3B5;</text>
+  <text x="100" y="560" font-size="40" opacity="0.4">&#x1F4A1;</text>
+  <text x="1060" y="560" font-size="40" opacity="0.4">&#x2753;</text>
+</svg>
