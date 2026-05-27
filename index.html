@@ -547,6 +547,7 @@
         <nav class="nav" id="nav">
             <button class="active" data-filter="all">All Games</button>
             <button data-filter="new">New Today</button>
+            <button data-filter="party">Party</button>
             <button data-filter="reflex">Reflex</button>
             <button data-filter="generator">Generator</button>
             <button data-filter="puzzle">Puzzle</button>
@@ -692,6 +693,18 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 /* ===== DATA ===== */
 const GAMES = [
+    {
+        slug:'pass-the-buck',
+        title:'Pass the Buck',
+        tagline:"A saloon dice game. Last buck wins the pot.",
+        url:'https://ptb.nsprd.com',
+        thumb:'https://ptb.nsprd.com/og.svg',
+        category:'party',
+        persona:'Jack',
+        color:'#c99a33',
+        deploy_date:'2026-05-26',
+        rating:{average:0,count:0}
+    },
     {
         slug:'hue-hunter',
         title:'Hue Hunter',
